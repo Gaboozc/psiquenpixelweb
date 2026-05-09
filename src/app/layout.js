@@ -61,7 +61,16 @@ export default function RootLayout({ children }) {
       lang="es"
       className={`dark ${pressStart2P.variable} ${cinzel.variable} ${inter.variable}`}
     >
-      <body className="min-h-screen flex flex-col bg-brand-bg text-brand-text antialiased">
+      <body className="min-h-screen flex flex-col text-brand-text antialiased">
+        <video
+          src="/video/hero-bg.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="fixed inset-0 w-full h-full object-cover -z-10"
+          aria-hidden="true"
+        />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

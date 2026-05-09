@@ -123,20 +123,6 @@ export default function Home() {
       {/* Section 1: Hero with video background                               */}
       {/* ------------------------------------------------------------------ */}
       <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background video */}
-        <video
-          src="/video/hero-bg.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          aria-hidden="true"
-        />
-
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
-
         {/* Scanlines overlay */}
         <div className="absolute inset-0 scanlines" aria-hidden="true" />
 
@@ -192,7 +178,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 2: Latest blog posts                                        */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 bg-brand-bg">
+      <section className="py-20 px-4 bg-brand-bg/85">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <p
@@ -228,7 +214,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 3: Game catalog                                             */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 bg-brand-surface">
+      <section className="py-20 px-4 bg-brand-surface/85">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <p
@@ -264,7 +250,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 4: Media banner                                             */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 bg-brand-bg">
+      <section className="py-20 px-4 bg-brand-bg/85">
         <div className="max-w-4xl mx-auto">
           <div className="bg-brand-surface pixel-border-purple p-8 md:p-12 text-center flex flex-col items-center gap-6">
             {/* Pixel art decorative blocks */}
@@ -313,7 +299,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 5: Community banner                                         */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 bg-brand-surface">
+      <section className="py-20 px-4 bg-brand-surface/85">
         <div className="max-w-4xl mx-auto">
           <div className="bg-brand-bg pixel-border-amber p-8 md:p-12 text-center flex flex-col items-center gap-6">
             {/* Twitch status indicator */}

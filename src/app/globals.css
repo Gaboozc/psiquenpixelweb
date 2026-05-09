@@ -22,13 +22,13 @@
 
 /* Base defaults */
 html {
-  background-color: #0d0d0f;
+  background-color: transparent;
   color: #e8e6f0;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #0d0d0f;
+  background-color: transparent;
   color: #e8e6f0;
 }
 
