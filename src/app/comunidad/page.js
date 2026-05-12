@@ -1,5 +1,5 @@
 import PageWrapper from '@/components/layout/PageWrapper';
-import Button from '@/components/ui/Button';
+import PillButton from '@/components/ui/PillButton';
 
 export const metadata = {
   title: 'Comunidad',
@@ -15,7 +15,7 @@ export default function ComunidadPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
         {/* Twitch section */}
-        <section className="bg-brand-surface pixel-border p-8 flex flex-col gap-6">
+        <section className="pixel-border p-8 flex flex-col gap-6 items-center text-center" style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <div className="flex items-center gap-3">
             <span className="w-3 h-3 rounded-full bg-brand-muted inline-block" />
             <span
@@ -48,13 +48,11 @@ export default function ComunidadPage() {
             </p>
           </div>
 
-          <Button variant="primary" href="#">
-            VER EN TWITCH
-          </Button>
+          <PillButton href="#">VER EN TWITCH</PillButton>
         </section>
 
         {/* Discord section */}
-        <section className="bg-brand-surface pixel-border-amber p-8 flex flex-col gap-6">
+        <section className="pixel-border-amber p-8 flex flex-col gap-6 items-center text-center" style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <p
             className="text-brand-amber text-[9px] tracking-widest"
             style={{ fontFamily: 'var(--font-pixel)' }}
@@ -87,9 +85,7 @@ export default function ComunidadPage() {
             </p>
           </div>
 
-          <Button variant="secondary" href="#">
-            UNIRSE AL DISCORD ⚔
-          </Button>
+          <PillButton href="#">UNIRSE AL DISCORD ⚔</PillButton>
         </section>
       </div>
     </PageWrapper>

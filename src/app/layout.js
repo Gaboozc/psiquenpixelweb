@@ -2,6 +2,7 @@ import { Press_Start_2P, Cinzel, Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry';
 
 const pressStart2P = Press_Start_2P({
   weight: '400',
@@ -61,7 +62,7 @@ export default function RootLayout({ children }) {
       lang="es"
       className={`dark ${pressStart2P.variable} ${cinzel.variable} ${inter.variable}`}
     >
-      <body className="min-h-screen flex flex-col text-brand-text antialiased">
+      <body className="min-h-screen flex flex-col text-brand-text antialiased bg-[#0d0d0f]">
         <video
           src="/video/hero-bg.mp4"
           autoPlay
@@ -71,9 +72,11 @@ export default function RootLayout({ children }) {
           className="fixed inset-0 w-full h-full object-cover -z-10"
           aria-hidden="true"
         />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <StyledComponentsRegistry>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

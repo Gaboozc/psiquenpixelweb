@@ -1,53 +1,34 @@
-import Link from 'next/link';
-
-const socialLinks = [
-  { label: 'YT',       href: '#', title: 'YouTube'   },
-  { label: 'SPTY',     href: '#', title: 'Spotify'   },
-  { label: 'TWTCH',    href: '#', title: 'Twitch'    },
-  { label: 'DC',       href: '#', title: 'Discord'   },
-  { label: 'IG',       href: '#', title: 'Instagram' },
-  { label: 'TK',       href: '#', title: 'TikTok'    },
-];
+import Image from 'next/image';
+import FooterSocialBox from '@/components/footer/FooterSocialBox';
 
 const Footer = () => (
-  <footer className="bg-brand-surface border-t border-brand-border mt-auto">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <footer
+    className="border-t border-brand-border mt-auto relative pb-10"
+    style={{ backgroundImage: 'url(/navbar-background.png?v=3)', backgroundSize: '100% 100%' }}
+  >
+    <div className="w-full px-6 lg:px-10 py-6 flex items-center justify-between gap-8">
 
-      {/* Social links */}
-      <div className="flex flex-wrap justify-center gap-3 mb-6">
-        {socialLinks.map(({ label, href, title }) => (
-          <Link
-            key={title}
-            href={href}
-            title={title}
-            className="px-3 py-1.5 text-[9px] tracking-widest text-brand-muted pixel-border transition-all duration-75
-                       hover:text-brand-purple hover:pixel-border-purple"
-            style={{ fontFamily: 'var(--font-pixel)' }}
-          >
-            {label}
-          </Link>
-        ))}
-      </div>
+      {/* Espacio izquierdo para el cartel */}
+      <div className="w-80 sm:w-96 shrink-0" />
 
-      {/* Divider */}
-      <div className="h-px bg-brand-border mb-6" />
-
-      {/* Copyright */}
-      <div className="text-center space-y-2">
-        <p
-          className="text-[9px] tracking-widest text-brand-muted"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          © 2025 PSIQUE &apos;N&apos; PIXEL
-        </p>
-        <p
-          className="text-[8px] tracking-widest text-brand-border"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          Las Mazmorras de la Mente
-        </p>
+      {/* Derecha: container único con redes sociales */}
+      <div className="ml-auto">
+        <FooterSocialBox />
       </div>
     </div>
+
+    {/* Cartel copyright — izquierda, pegado al borde inferior */}
+    <div className="absolute bottom-0 left-6 lg:left-16">
+      <Image
+        src="/footer-icons/footer-pnp.png"
+        alt="© Psique 'n' Pixel — Todos los derechos reservados"
+        width={480}
+        height={120}
+        className="w-[28rem] sm:w-[36rem] h-auto"
+        unoptimized
+      />
+    </div>
+
   </footer>
 );
 

@@ -29,7 +29,7 @@ export default function MediaPage() {
           </p>
 
           {/* Replace YOUR_VIDEO_ID with a real YouTube video ID */}
-          <div className="bg-brand-surface pixel-border p-4 text-center">
+          <div className="pixel-border p-4 text-center" style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <p
               className="text-brand-muted text-[9px] tracking-widest"
               style={{ fontFamily: 'var(--font-pixel)' }}
@@ -54,7 +54,7 @@ export default function MediaPage() {
           </p>
 
           {/* Replace YOUR_SHOW_ID with a real Spotify show ID */}
-          <div className="bg-brand-surface pixel-border-amber p-4 text-center">
+          <div className="pixel-border-amber p-4 text-center" style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
             <p
               className="text-brand-muted text-[9px] tracking-widest"
               style={{ fontFamily: 'var(--font-pixel)' }}

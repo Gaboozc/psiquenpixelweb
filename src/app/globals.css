@@ -3,6 +3,11 @@
 
 @import "tailwindcss";
 
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 /* Tailwind v4 theme: colors + fonts */
 @theme {
   --color-brand-bg:          #0d0d0f;

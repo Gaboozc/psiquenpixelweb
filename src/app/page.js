@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import PixelDivider from '@/components/ui/PixelDivider';
 import Button from '@/components/ui/Button';
+import PillButton from '@/components/ui/PillButton';
 import ArticleCard from '@/components/blog/ArticleCard';
 import GameCard from '@/components/catalogo/GameCard';
 
@@ -122,54 +124,24 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 1: Hero with video background                               */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-[50vh] md:min-h-screen flex items-center justify-center overflow-hidden">
         {/* Scanlines overlay */}
         <div className="absolute inset-0 scanlines" aria-hidden="true" />
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center flex flex-col items-center gap-6">
-          {/* Tag line */}
-          <p
-            className="text-brand-amber text-[9px] tracking-[0.3em] uppercase"
-            style={{ fontFamily: 'var(--font-pixel)' }}
-          >
-            ▶ Análisis · Psicología · Videojuegos
-          </p>
+        <div className="relative z-10 w-full flex flex-col items-center">
 
-          {/* Main title */}
-          <h1
-            className="text-brand-text text-3xl sm:text-4xl md:text-5xl leading-tight"
-            style={{ fontFamily: 'var(--font-pixel)' }}
-          >
-            Psique &apos;<span className="text-brand-purple text-glow-purple">n</span>&apos; Pixel
-          </h1>
+          {/* Logo — desktop y móvil */}
+          <Image
+            src="/logo-no-bg.png"
+            alt="Psique 'n' Pixel — Las Mazmorras de la Mente"
+            width={1200}
+            height={480}
+            priority
+            unoptimized
+            className="w-[150vw] md:w-[80%] max-w-none h-auto"
+          />
 
-          {/* Subtitle */}
-          <p
-            className="text-brand-amber text-base sm:text-lg md:text-xl tracking-[0.2em] uppercase"
-            style={{ fontFamily: 'var(--font-cinzel)' }}
-          >
-            Las Mazmorras de la Mente
-          </p>
-
-          {/* Typewriter description */}
-          <p
-            className="text-brand-muted text-sm sm:text-base max-w-xl leading-relaxed min-h-[3rem]"
-            style={{ fontFamily: 'var(--font-body)' }}
-          >
-            {text}
-            <span className="cursor-blink text-brand-purple ml-0.5">|</span>
-          </p>
-
-          {/* CTA buttons */}
-          <div className="flex flex-wrap gap-4 justify-center mt-2">
-            <Button variant="primary" href="/blog">
-              ▶ EXPLORAR BLOG
-            </Button>
-            <Button variant="secondary" href="/comunidad">
-              ⚔ UNIRSE AL DISCORD
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -252,18 +224,10 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       <section className="py-20 px-4 bg-brand-bg/85">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-brand-surface pixel-border-purple p-8 md:p-12 text-center flex flex-col items-center gap-6">
-            {/* Pixel art decorative blocks */}
-            <div aria-hidden="true" className="flex gap-1">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div
-                  key={i}
-                  className="w-3 h-3"
-                  style={{ background: i % 2 === 0 ? '#6b3bbf' : '#9b59f7' }}
-                />
-              ))}
-            </div>
-
+          <div
+            className="pixel-border-purple p-8 md:p-12 text-center flex flex-col items-center gap-6"
+            style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
             <p
               className="text-brand-purple text-[9px] tracking-widest"
               style={{ fontFamily: 'var(--font-pixel)' }}
@@ -283,12 +247,8 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button variant="primary" href="/media">
-                ▶ IR A MEDIA
-              </Button>
-              <Button variant="secondary" href="#">
-                ♫ SPOTIFY
-              </Button>
+              <PillButton href="/media">▶ IR A MEDIA</PillButton>
+              <PillButton href="#">♫ SPOTIFY</PillButton>
             </div>
           </div>
         </div>
@@ -301,8 +261,10 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       <section className="py-20 px-4 bg-brand-surface/85">
         <div className="max-w-4xl mx-auto">
-          <div className="bg-brand-bg pixel-border-amber p-8 md:p-12 text-center flex flex-col items-center gap-6">
-            {/* Twitch status indicator */}
+          <div
+            className="pixel-border-amber p-8 md:p-12 text-center flex flex-col items-center gap-6"
+            style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-brand-muted inline-block" />
               <span
@@ -332,12 +294,8 @@ export default function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center">
-              <Button variant="secondary" href="/comunidad">
-                JOIN THE GUILD ⚔
-              </Button>
-              <Button variant="primary" href="#">
-                VER EN TWITCH
-              </Button>
+              <PillButton href="/comunidad">JOIN THE GUILD ⚔</PillButton>
+              <PillButton href="#">VER EN TWITCH</PillButton>
             </div>
           </div>
         </div>

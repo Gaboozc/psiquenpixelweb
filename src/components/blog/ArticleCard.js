@@ -3,7 +3,10 @@ import Badge from '@/components/ui/Badge';
 
 const ArticleCard = ({ title, excerpt, slug, date, tags = [], category }) => (
   <Link href={`/blog/${slug}`} className="block group">
-    <article className="bg-brand-surface pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-purple">
+    <article
+      className="pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-purple"
+      style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
 
       {/* Thumbnail placeholder — pixel art pattern via CSS */}
       <div

@@ -3,7 +3,10 @@ import Badge from '@/components/ui/Badge';
 
 const GameCard = ({ title, game, excerpt, slug, date, genre = [], tags = [] }) => (
   <Link href={`/catalogo/${slug}`} className="block group">
-    <article className="bg-brand-surface pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-amber">
+    <article
+      className="pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-amber"
+      style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
 
       {/* Thumbnail placeholder — amber-tinted pixel art pattern */}
       <div
