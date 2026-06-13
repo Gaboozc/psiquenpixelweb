@@ -27,7 +27,7 @@
 
 /* Base defaults */
 html {
-  background-color: transparent;
+  background-color: #0d0d0f;
   color: #e8e6f0;
 }
 
@@ -57,6 +57,30 @@ body {
 .pixel-border-amber {
   border: 2px solid #e8903a;
   box-shadow: 4px 4px 0px #a8621a, 0 0 10px rgba(232, 144, 58, 0.25);
+}
+
+/* Dungeon stone tile background */
+.dungeon-bg {
+  background-color: #0d0d0f;
+  background-image:
+    linear-gradient(rgba(42, 37, 53, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 37, 53, 0.5) 1px, transparent 1px),
+    linear-gradient(rgba(22, 21, 26, 0.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 21, 26, 0.8) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+}
+
+/* Dungeon bg with surface color */
+.dungeon-surface {
+  background-color: #16151a;
+  background-image:
+    linear-gradient(rgba(42, 37, 53, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 37, 53, 0.5) 1px, transparent 1px),
+    linear-gradient(rgba(22, 21, 26, 0.8) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22, 21, 26, 0.8) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
 }
 
 /* CRT scanlines overlay */
@@ -94,4 +118,45 @@ body {
 
 .cursor-blink {
   animation: blink 1s step-end infinite;
+}
+
+/* Admin panel overrides */
+.admin-panel {
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-input {
+  background: #16151a;
+  border: 1px solid #2a2535;
+  color: #e8e6f0;
+  padding: 8px 12px;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.admin-input:focus {
+  border-color: #9b59f7;
+  box-shadow: 0 0 0 2px rgba(155, 89, 247, 0.15);
+}
+
+.admin-textarea {
+  background: #16151a;
+  border: 1px solid #2a2535;
+  color: #e8e6f0;
+  padding: 8px 12px;
+  width: 100%;
+  font-family: 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 13px;
+  outline: none;
+  resize: vertical;
+  min-height: 300px;
+  transition: border-color 0.15s;
+}
+
+.admin-textarea:focus {
+  border-color: #9b59f7;
+  box-shadow: 0 0 0 2px rgba(155, 89, 247, 0.15);
 }
