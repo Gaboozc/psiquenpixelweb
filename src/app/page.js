@@ -124,7 +124,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 1: Hero with video background                               */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative w-full min-h-[50vh] md:min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] md:min-h-screen flex items-center justify-center overflow-hidden">
         {/* Video background */}
         <video
           src="/video/hero-bg.mp4"
@@ -137,15 +137,15 @@ export default function Home() {
         />
 
         {/* Dark gradient overlay for readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-bg/70 via-brand-bg/50 to-brand-bg/90" aria-hidden="true" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-bg/75 via-brand-bg/55 to-brand-bg/90" aria-hidden="true" />
 
         {/* Scanlines overlay */}
         <div className="absolute inset-0 scanlines" aria-hidden="true" />
 
         {/* Hero content */}
-        <div className="relative z-10 w-full flex flex-col items-center gap-6">
+        <div className="relative z-10 w-full flex flex-col items-center gap-4 sm:gap-6 px-4">
 
-          {/* Logo */}
+          {/* Logo — contained on mobile, large on desktop */}
           <Image
             src="/logo-no-bg.png"
             alt="Psique 'n' Pixel — Las Mazmorras de la Mente"
@@ -153,19 +153,19 @@ export default function Home() {
             height={480}
             priority
             unoptimized
-            className="w-[150vw] md:w-[80%] max-w-none h-auto drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
+            className="w-full sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-5xl h-auto drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
           />
 
           {/* Typewriter subtitle */}
           <p
-            className="text-brand-muted text-[9px] md:text-[10px] tracking-widest text-center max-w-lg px-4 min-h-[2rem]"
+            className="text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             {text}<span className="cursor-blink">█</span>
           </p>
 
           {/* CTA buttons */}
-          <div className="flex flex-wrap gap-4 justify-center mt-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-2 w-full max-w-xs sm:max-w-none">
             <Button variant="primary" href="/blog">LEER POSTS</Button>
             <Button variant="secondary" href="/catalogo">VER CATÁLOGO</Button>
           </div>
@@ -177,7 +177,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 2: Latest blog posts                                        */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 dungeon-bg">
+      <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-bg">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <p
@@ -213,7 +213,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 3: Game catalog                                             */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 dungeon-surface">
+      <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-surface">
         <div className="max-w-7xl mx-auto">
           <div className="mb-12 text-center">
             <p
@@ -249,7 +249,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 4: Media banner                                             */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 dungeon-bg">
+      <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-bg">
         <div className="max-w-4xl mx-auto">
           <div
             className="pixel-border-purple p-8 md:p-12 text-center flex flex-col items-center gap-6"
@@ -287,7 +287,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 5: Community banner                                         */}
       {/* ------------------------------------------------------------------ */}
-      <section className="py-20 px-4 dungeon-surface">
+      <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-surface">
         <div className="max-w-4xl mx-auto">
           <div
             className="pixel-border-amber p-8 md:p-12 text-center flex flex-col items-center gap-6"
