@@ -2,7 +2,7 @@ import PageWrapper from '@/components/layout/PageWrapper';
 import ArticleCard from '@/components/blog/ArticleCard';
 
 export const metadata = {
-  title: 'Blog',
+  title: 'Posts',
   description: 'Artículos de análisis psicológico, narrativo y cultural de videojuegos.',
 };
 
@@ -34,11 +34,12 @@ const ARTICLES = [
   },
 ];
 
-export default function BlogPage() {
+export default function PostsPage() {
   return (
     <PageWrapper
-      title="Blog"
+      title="Posts"
       subtitle="Análisis psicológico, narrativo y cultural de videojuegos"
+      accentColor="purple"
     >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {ARTICLES.map((article) => (
