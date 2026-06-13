@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { GameEditor } from '@/components/admin/ContentEditor';
+import { ap } from '@/lib/adminPath';
 
 export default function EditGamePage() {
   const { slug } = useParams();
@@ -26,7 +27,7 @@ export default function EditGamePage() {
     });
     const data = await res.json();
     if (!res.ok) return data.error || 'Error al guardar';
-    router.push('/admin/catalogo');
+    router.push(ap('/catalogo'));
     router.refresh();
     return null;
   };

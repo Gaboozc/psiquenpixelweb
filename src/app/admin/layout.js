@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { ADMIN_BASE, ap } from '@/lib/adminPath';
 
 const NAV_ITEMS = [
-  { href: '/admin', label: 'Dashboard', icon: '⊞', exact: true },
-  { href: '/admin/posts', label: 'Posts', icon: '✦' },
-  { href: '/admin/catalogo', label: 'Catálogo', icon: '⚔' },
-  { href: '/admin/mazmorra', label: 'Mazmorra Semana', icon: '★' },
+  { href: ap(),           label: 'Dashboard',        icon: '⊞', exact: true },
+  { href: ap('/posts'),   label: 'Posts',             icon: '✦' },
+  { href: ap('/catalogo'),label: 'Catálogo',          icon: '⚔' },
+  { href: ap('/mazmorra'),label: 'Mazmorra Semana',   icon: '★' },
 ];
 
 function AdminSidebar({ onClose }) {
@@ -20,7 +21,7 @@ function AdminSidebar({ onClose }) {
 
   const handleLogout = async () => {
     await fetch('/api/admin/auth/logout', { method: 'POST' });
-    router.push('/admin/login');
+    router.push(ap('/login'));
     router.refresh();
   };
 
@@ -80,7 +81,7 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="fixed inset-0 z-[100] bg-brand-bg flex overflow-hidden admin-panel">
-      {/* Sidebar — desktop always visible, mobile as overlay */}
+      {/* Sidebar — desktop always visible */}
       <div className="hidden md:flex h-full">
         <AdminSidebar />
       </div>
@@ -91,10 +92,7 @@ export default function AdminLayout({ children }) {
           <div className="w-64 h-full overflow-y-auto">
             <AdminSidebar onClose={() => setSidebarOpen(false)} />
           </div>
-          <div
-            className="flex-1 bg-black/60"
-            onClick={() => setSidebarOpen(false)}
-          />
+          <div className="flex-1 bg-black/60" onClick={() => setSidebarOpen(false)} />
         </div>
       )}
 

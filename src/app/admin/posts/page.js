@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
 import DeleteButton from '@/components/admin/DeleteButton';
+import { ap } from '@/lib/adminPath';
 
 async function getPosts() {
   const dir = path.join(process.cwd(), 'src', 'content', 'blog');
@@ -11,7 +12,12 @@ async function getPosts() {
     files.map(async (filename) => {
       const raw = await fs.readFile(path.join(dir, filename), 'utf8');
       const { data } = matter(raw);
-      return { slug: data.slug ?? filename.replace('.md', ''), title: data.title ?? '—', date: data.date ?? '', category: data.category ?? '—' };
+      return {
+        slug:     data.slug     ?? filename.replace('.md', ''),
+        title:    data.title    ?? '—',
+        date:     data.date     ?? '',
+        category: data.category ?? '—',
+      };
     }),
   );
   return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -28,7 +34,7 @@ export default async function AdminPostsPage() {
           <p className="text-brand-muted text-sm font-body">{posts.length} artículos</p>
         </div>
         <Link
-          href="/admin/posts/new"
+          href={ap('/posts/new')}
           className="bg-brand-purple text-white text-xs px-4 py-2 font-body hover:bg-brand-purple-dim transition-colors"
           style={{ boxShadow: '3px 3px 0 #6b3bbf' }}
         >
@@ -40,7 +46,7 @@ export default async function AdminPostsPage() {
         <div className="pixel-border p-12 text-center"
           style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <p className="text-brand-muted text-sm font-body">No hay posts aún.</p>
-          <Link href="/admin/posts/new" className="inline-block mt-4 text-brand-purple text-xs font-body hover:underline">
+          <Link href={ap('/posts/new')} className="inline-block mt-4 text-brand-purple text-xs font-body hover:underline">
             Crear el primero →
           </Link>
         </div>
@@ -67,7 +73,7 @@ export default async function AdminPostsPage() {
                   <td className="py-3 pr-4 text-brand-muted hidden sm:table-cell">{post.category}</td>
                   <td className="py-3 pr-4 text-brand-muted hidden md:table-cell">{post.date}</td>
                   <td className="py-3 text-right whitespace-nowrap">
-                    <Link href={`/admin/posts/${post.slug}/edit`}
+                    <Link href={ap(`/posts/${post.slug}/edit`)}
                       className="text-brand-muted hover:text-brand-purple text-xs mr-4 transition-colors font-body">
                       Editar
                     </Link>

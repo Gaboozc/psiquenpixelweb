@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ap } from '@/lib/adminPath';
 
 export default function AdminLoginPage() {
   const [password, setPassword] = useState('');
@@ -21,7 +22,7 @@ export default function AdminLoginPage() {
     });
 
     if (res.ok) {
-      router.push('/admin');
+      router.push(ap());
       router.refresh();
     } else {
       const data = await res.json();
@@ -90,7 +91,7 @@ export default function AdminLoginPage() {
         </form>
 
         <p className="text-center text-brand-border text-[8px] mt-4 font-body">
-          Define ADMIN_PASSWORD en .env.local
+          Define ADMIN_PASSWORD y NEXT_PUBLIC_ADMIN_PATH en .env.local
         </p>
       </div>
     </div>

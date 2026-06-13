@@ -3,6 +3,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
 import DeleteButton from '@/components/admin/DeleteButton';
+import { ap } from '@/lib/adminPath';
 
 async function getGames() {
   const dir = path.join(process.cwd(), 'src', 'content', 'catalogo');
@@ -34,7 +35,7 @@ export default async function AdminCatalogoPage() {
           <p className="text-brand-muted text-sm font-body">{games.length} análisis</p>
         </div>
         <Link
-          href="/admin/catalogo/new"
+          href={ap('/catalogo/new')}
           className="border border-brand-amber text-brand-amber text-xs px-4 py-2 font-body hover:bg-brand-amber/10 transition-colors"
         >
           + Nuevo Análisis
@@ -45,7 +46,7 @@ export default async function AdminCatalogoPage() {
         <div className="pixel-border p-12 text-center"
           style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <p className="text-brand-muted text-sm font-body">No hay análisis aún.</p>
-          <Link href="/admin/catalogo/new" className="inline-block mt-4 text-brand-amber text-xs font-body hover:underline">
+          <Link href={ap('/catalogo/new')} className="inline-block mt-4 text-brand-amber text-xs font-body hover:underline">
             Crear el primero →
           </Link>
         </div>
@@ -74,7 +75,7 @@ export default async function AdminCatalogoPage() {
                   <td className="py-3 pr-4 text-brand-muted hidden sm:table-cell">{game.genre}</td>
                   <td className="py-3 pr-4 text-brand-muted hidden lg:table-cell">{game.date}</td>
                   <td className="py-3 text-right whitespace-nowrap">
-                    <Link href={`/admin/catalogo/${game.slug}/edit`}
+                    <Link href={ap(`/catalogo/${game.slug}/edit`)}
                       className="text-brand-muted hover:text-brand-purple text-xs mr-4 transition-colors font-body">
                       Editar
                     </Link>

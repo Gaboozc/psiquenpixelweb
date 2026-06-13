@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import Link from 'next/link';
+import { ap } from '@/lib/adminPath';
 
 async function getStats() {
   const blogDir = path.join(process.cwd(), 'src', 'content', 'blog');
@@ -23,7 +24,7 @@ async function getStats() {
 
 const StatCard = ({ label, value, href, color }) => (
   <Link href={href} className="block group">
-    <div className={`pixel-border p-6 flex flex-col gap-2 hover:-translate-y-0.5 transition-transform`}
+    <div className="pixel-border p-6 flex flex-col gap-2 hover:-translate-y-0.5 transition-transform"
       style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
       <span className={`text-[8px] tracking-widest ${color}`} style={{ fontFamily: 'var(--font-pixel)' }}>
@@ -49,9 +50,9 @@ export default async function AdminDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
-        <StatCard label="POSTS" value={stats.posts} href="/admin/posts" color="text-brand-purple" />
-        <StatCard label="CATÁLOGO" value={stats.games} href="/admin/catalogo" color="text-brand-amber" />
-        <StatCard label="SUSCRIPTORES" value="—" href="/admin" color="text-brand-muted" />
+        <StatCard label="POSTS" value={stats.posts} href={ap('/posts')} color="text-brand-purple" />
+        <StatCard label="CATÁLOGO" value={stats.games} href={ap('/catalogo')} color="text-brand-amber" />
+        <StatCard label="SUSCRIPTORES" value="—" href={ap()} color="text-brand-muted" />
       </div>
 
       {/* Quick actions */}
@@ -61,20 +62,20 @@ export default async function AdminDashboard() {
         </h2>
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/admin/posts/new"
+            href={ap('/posts/new')}
             className="bg-brand-purple text-white text-xs px-4 py-2 font-body hover:bg-brand-purple-dim transition-colors"
             style={{ boxShadow: '3px 3px 0 #6b3bbf' }}
           >
             + Nuevo Post
           </Link>
           <Link
-            href="/admin/catalogo/new"
+            href={ap('/catalogo/new')}
             className="border border-brand-amber text-brand-amber text-xs px-4 py-2 font-body hover:bg-brand-amber/10 transition-colors"
           >
             + Nuevo Análisis
           </Link>
           <Link
-            href="/admin/mazmorra"
+            href={ap('/mazmorra')}
             className="border border-brand-border text-brand-muted text-xs px-4 py-2 font-body hover:text-brand-text hover:border-brand-purple transition-colors"
           >
             ⚔ Mazmorra de la Semana
@@ -94,7 +95,7 @@ export default async function AdminDashboard() {
             <p className="text-brand-amber text-xs font-body font-medium mb-1">{stats.mazmorra.game}</p>
             <p className="text-brand-text text-sm font-body mb-2">{stats.mazmorra.title}</p>
             <p className="text-brand-muted text-xs font-body line-clamp-2">{stats.mazmorra.excerpt}</p>
-            <Link href="/admin/mazmorra" className="inline-block mt-3 text-brand-amber text-[9px] hover:underline" style={{ fontFamily: 'var(--font-pixel)' }}>
+            <Link href={ap('/mazmorra')} className="inline-block mt-3 text-brand-amber text-[9px] hover:underline" style={{ fontFamily: 'var(--font-pixel)' }}>
               Cambiar →
             </Link>
           </div>

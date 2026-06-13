@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { PostEditor } from '@/components/admin/ContentEditor';
+import { ap } from '@/lib/adminPath';
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function NewPostPage() {
     });
     const data = await res.json();
     if (!res.ok) return data.error || 'Error al guardar';
-    router.push('/admin/posts');
+    router.push(ap('/posts'));
     router.refresh();
     return null;
   };
