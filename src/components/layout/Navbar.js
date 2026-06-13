@@ -82,10 +82,18 @@ const Navbar = () => {
           <button
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-            className="sm:hidden ml-auto border border-brand-purple/60 px-3 py-1.5 text-brand-text hover:border-brand-purple hover:text-brand-purple transition-colors"
-            style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', letterSpacing: '0.15em', boxShadow: open ? '0 0 12px rgba(155,89,247,0.5)' : 'none' }}
+            className="sm:hidden ml-auto transition-all duration-150 hover:scale-105 active:scale-95"
+            style={{ filter: open ? 'brightness(1.3) drop-shadow(0 0 8px rgba(155,89,247,0.8))' : 'brightness(1)' }}
           >
-            {open ? '✕ CERRAR' : '⚔ MENU'}
+            <Image
+              src="/iconos/menu-btn.png"
+              alt="Menú"
+              width={160}
+              height={60}
+              className="h-9 w-auto"
+              unoptimized
+              priority
+            />
           </button>
 
         </div>
