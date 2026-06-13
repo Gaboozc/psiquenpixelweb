@@ -36,14 +36,14 @@ const Navbar = () => {
     >
       <div className="w-full px-2 sm:px-4 xl:px-10">
         {/*
-          Logo stays left (z-10 so it's always clickable).
-          Nav icons are absolutely centered in the full navbar width —
-          no more huge gap between logo and icons on tablet/landscape.
+          Logo flex-shrink-0 on the left.
+          Nav takes flex-1 (all remaining width). Each icon link is also flex-1,
+          so the 6 icons divide the remaining space equally — no dead gaps anywhere.
         */}
-        <div className="relative flex items-center h-14 sm:h-16 md:h-20 lg:h-24 xl:h-32 2xl:h-36">
+        <div className="flex items-center h-14 sm:h-16 md:h-20 lg:h-24 xl:h-32 2xl:h-36">
 
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 relative z-10">
+          <Link href="/" className="flex-shrink-0">
             <Image
               src="/logo-typo.png"
               alt="Psique 'n' Pixel"
@@ -55,30 +55,28 @@ const Navbar = () => {
             />
           </Link>
 
-          {/* Nav icons — absolutely centered so there's no dead gap on tablet */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none xl:-translate-y-2 2xl:-translate-y-3">
-            <div className="flex items-center gap-0 sm:gap-0.5 xl:gap-1 2xl:gap-2 pointer-events-auto">
-              {navLinks.map(({ href, label, icon }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`transition-all duration-75 ${
-                    isActive(href)
-                      ? 'opacity-100 drop-shadow-[0_0_8px_#9b59f7]'
-                      : 'opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <Image
-                    src={`${icon}?v=3`}
-                    alt={label}
-                    width={160}
-                    height={160}
-                    className="w-8 sm:w-10 md:w-14 lg:w-16 xl:w-24 2xl:w-36 h-8 sm:h-10 md:h-14 lg:h-16 xl:h-24 2xl:h-36 object-contain"
-                    unoptimized
-                  />
-                </Link>
-              ))}
-            </div>
+          {/* Nav — flex-1 fills the rest; each icon link is also flex-1 */}
+          <div className="flex-1 flex items-center xl:-mt-4 2xl:-mt-6">
+            {navLinks.map(({ href, label, icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`flex-1 flex items-center justify-center transition-all duration-75 ${
+                  isActive(href)
+                    ? 'opacity-100 drop-shadow-[0_0_8px_#9b59f7]'
+                    : 'opacity-70 hover:opacity-100'
+                }`}
+              >
+                <Image
+                  src={`${icon}?v=3`}
+                  alt={label}
+                  width={160}
+                  height={160}
+                  className="w-8 sm:w-10 md:w-12 lg:w-16 xl:w-24 2xl:w-36 h-8 sm:h-10 md:h-12 lg:h-16 xl:h-24 2xl:h-36 object-contain"
+                  unoptimized
+                />
+              </Link>
+            ))}
           </div>
 
         </div>
