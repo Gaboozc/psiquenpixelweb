@@ -40,7 +40,7 @@ const Navbar = () => {
           Nav takes flex-1 (all remaining width). Each icon link is also flex-1,
           so the 6 icons divide the remaining space equally — no dead gaps anywhere.
         */}
-        <div className="flex items-center h-14 sm:h-16 md:h-20 lg:h-24 xl:h-32 2xl:h-36">
+        <div className="flex items-center h-16 sm:h-20 md:h-24 lg:h-28 xl:h-32 2xl:h-36">
 
           {/* Logo */}
           <Link href="/" className="flex-shrink-0">
@@ -49,7 +49,7 @@ const Navbar = () => {
               alt="Psique 'n' Pixel"
               width={320}
               height={100}
-              className="h-8 sm:h-10 md:h-12 lg:h-14 xl:h-20 2xl:h-24 w-auto"
+              className="h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 w-auto"
               priority
               unoptimized
             />
@@ -72,7 +72,7 @@ const Navbar = () => {
                   alt={label}
                   width={160}
                   height={160}
-                  className="w-8 sm:w-10 md:w-12 lg:w-16 xl:w-24 2xl:w-36 h-8 sm:h-10 md:h-12 lg:h-16 xl:h-24 2xl:h-36 object-contain"
+                  className="w-12 sm:w-14 md:w-16 lg:w-20 xl:w-24 2xl:w-36 h-12 sm:h-14 md:h-16 lg:h-20 xl:h-24 2xl:h-36 object-contain"
                   unoptimized
                 />
               </Link>
