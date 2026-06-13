@@ -124,7 +124,7 @@ export default function Home() {
       {/* ------------------------------------------------------------------ */}
       {/* Section 1: Hero with video background                               */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative w-full min-h-[60vh] sm:min-h-[75vh] md:min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
         {/* Video background */}
         <video
           src="/video/hero-bg.mp4"
@@ -143,9 +143,9 @@ export default function Home() {
         <div className="absolute inset-0 scanlines" aria-hidden="true" />
 
         {/* Hero content */}
-        <div className="relative z-10 w-full flex flex-col items-center gap-4 sm:gap-6">
+        <div className="relative z-10 w-full flex flex-col items-center gap-2 sm:gap-4">
 
-          {/* Logo — full-bleed on mobile (no side padding), constrained on larger screens */}
+          {/* Logo — oversized on mobile so the center content fills portrait screens */}
           <Image
             src="/logo-no-bg.png"
             alt="Psique 'n' Pixel — Las Mazmorras de la Mente"
@@ -153,19 +153,19 @@ export default function Home() {
             height={480}
             priority
             unoptimized
-            className="w-full sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-5xl h-auto drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
+            className="w-[140vw] sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-none sm:max-w-5xl h-auto drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
           />
 
           {/* Typewriter subtitle */}
           <p
-            className="px-4 text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
+            className="px-4 text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2rem] leading-relaxed"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             {text}<span className="cursor-blink">█</span>
           </p>
 
           {/* CTA buttons */}
-          <div className="px-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-2 w-full max-w-xs sm:max-w-none">
+          <div className="px-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full max-w-xs sm:max-w-none">
             <Button variant="primary" href="/blog">LEER POSTS</Button>
             <Button variant="secondary" href="/catalogo">VER CATÁLOGO</Button>
           </div>
