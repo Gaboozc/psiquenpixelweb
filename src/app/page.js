@@ -143,9 +143,9 @@ export default function Home() {
         <div className="absolute inset-0 scanlines" aria-hidden="true" />
 
         {/* Hero content */}
-        <div className="relative z-10 w-full flex flex-col items-center gap-4 sm:gap-6 px-4">
+        <div className="relative z-10 w-full flex flex-col items-center gap-4 sm:gap-6">
 
-          {/* Logo — contained on mobile, large on desktop */}
+          {/* Logo — full-bleed on mobile (no side padding), constrained on larger screens */}
           <Image
             src="/logo-no-bg.png"
             alt="Psique 'n' Pixel — Las Mazmorras de la Mente"
@@ -158,14 +158,14 @@ export default function Home() {
 
           {/* Typewriter subtitle */}
           <p
-            className="text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
+            className="px-4 text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             {text}<span className="cursor-blink">█</span>
           </p>
 
           {/* CTA buttons */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-2 w-full max-w-xs sm:max-w-none">
+          <div className="px-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mt-2 w-full max-w-xs sm:max-w-none">
             <Button variant="primary" href="/blog">LEER POSTS</Button>
             <Button variant="secondary" href="/catalogo">VER CATÁLOGO</Button>
           </div>
