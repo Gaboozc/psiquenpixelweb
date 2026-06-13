@@ -20,36 +20,43 @@ function NewsletterForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      if (res.ok) {
-        setStatus('success');
-        setEmail('');
-      } else {
-        setStatus('error');
-      }
+      setStatus(res.ok ? 'success' : 'error');
+      if (res.ok) setEmail('');
     } catch {
       setStatus('error');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 w-full max-w-md">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="tu@email.com"
-        disabled={status === 'loading' || status === 'success'}
-        className="flex-1 bg-brand-bg/70 border border-brand-border text-brand-text text-xs px-3 py-2 outline-none placeholder:text-brand-muted focus:border-brand-purple transition-colors font-body"
-      />
-      <button
-        type="submit"
-        disabled={status === 'loading' || status === 'success'}
-        className="bg-brand-purple text-white text-[8px] tracking-widest px-4 py-2 hover:bg-brand-purple-dim transition-colors disabled:opacity-50 shrink-0"
-        style={{ fontFamily: 'var(--font-pixel)', boxShadow: '3px 3px 0 #6b3bbf' }}
-      >
-        {status === 'loading' ? '...' : status === 'success' ? '✓ OK' : 'ENVIAR'}
-      </button>
-    </form>
+    <div className="w-full">
+      {status === 'success' ? (
+        <p className="text-brand-purple text-[9px] text-center" style={{ fontFamily: 'var(--font-pixel)' }}>
+          ✓ ¡Suscrito, Héroe!
+        </p>
+      ) : (
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="tu@email.com"
+            disabled={status === 'loading'}
+            className="flex-1 min-w-0 bg-brand-bg/70 border border-brand-border text-brand-text text-xs px-3 py-2 outline-none placeholder:text-brand-muted focus:border-brand-purple transition-colors font-body"
+          />
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="shrink-0 bg-brand-purple text-white text-[8px] tracking-widest px-4 py-2 hover:bg-brand-purple-dim transition-colors disabled:opacity-50"
+            style={{ fontFamily: 'var(--font-pixel)', boxShadow: '3px 3px 0 #6b3bbf' }}
+          >
+            {status === 'loading' ? '...' : 'ENVIAR'}
+          </button>
+        </form>
+      )}
+      {status === 'error' && (
+        <p className="text-red-400 text-[9px] mt-1 font-body">Error al suscribirse. Inténtalo de nuevo.</p>
+      )}
+    </div>
   );
 }
 
@@ -59,34 +66,34 @@ function NewsletterForm() {
 export default function FooterPergaminos({ mazmorra }) {
   return (
     <div
-      className="w-full max-w-2xl pixel-border flex flex-col gap-0 overflow-hidden"
+      className="w-full max-w-xl pixel-border overflow-hidden"
       style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
-      {/* ── TOP: Newsletter ─────────────────────────────────────── */}
-      <div className="px-6 py-5 border-b border-brand-border/60">
+      {/* ── TOP: Newsletter ────────────────────────────────────────── */}
+      <div className="px-4 sm:px-6 py-4 border-b border-brand-border/60">
         <p
-          className="text-brand-purple text-[8px] tracking-widest mb-1"
+          className="text-brand-purple text-[7px] sm:text-[8px] tracking-widest mb-1"
           style={{ fontFamily: 'var(--font-pixel)' }}
         >
           ✦ PERGAMINOS DE LA MAZMORRA ✦
         </p>
         <h3
-          className="text-brand-text text-xs mb-3"
+          className="text-brand-text text-[9px] sm:text-xs mb-2"
           style={{ fontFamily: 'var(--font-pixel)' }}
         >
           ¡Suscríbete, Héroe!
         </h3>
-        <p className="text-brand-muted text-[11px] font-body mb-4 leading-relaxed">
-          Recibe los análisis más profundos directamente en tu correo. Sin spam, solo mazmorras.
+        <p className="text-brand-muted text-[10px] sm:text-xs font-body mb-3 leading-relaxed">
+          Recibe los análisis más profundos en tu correo. Sin spam, solo mazmorras.
         </p>
         <NewsletterForm />
       </div>
 
-      {/* ── BOTTOM: Mazmorra de la Semana + Apoyo ───────────────── */}
+      {/* ── BOTTOM: Mazmorra + Apoyo ───────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-brand-border/60">
 
         {/* Mazmorra de la Semana */}
-        <div className="px-5 py-4 flex flex-col gap-2">
+        <div className="px-4 sm:px-5 py-4 flex flex-col gap-2">
           <p
             className="text-brand-amber text-[7px] tracking-widest"
             style={{ fontFamily: 'var(--font-pixel)' }}
@@ -96,50 +103,45 @@ export default function FooterPergaminos({ mazmorra }) {
 
           {mazmorra ? (
             <>
-              <p
-                className="text-brand-purple text-[8px]"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
+              <p className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>
                 {mazmorra.game}
               </p>
-              <p className="text-brand-text text-[11px] font-body leading-snug line-clamp-2">
+              <p className="text-brand-text text-xs font-body leading-snug line-clamp-2">
                 {mazmorra.title}
               </p>
-              <p className="text-brand-muted text-[10px] font-body leading-relaxed line-clamp-3">
+              <p className="text-brand-muted text-[10px] font-body leading-relaxed line-clamp-2">
                 {mazmorra.excerpt}
               </p>
               <Link
                 href={`/catalogo/${mazmorra.slug}`}
-                className="text-brand-amber text-[8px] tracking-wider hover:text-brand-amber-dim transition-colors mt-auto"
+                className="text-brand-amber text-[8px] tracking-wider hover:text-brand-amber-dim transition-colors mt-auto pt-1"
                 style={{ fontFamily: 'var(--font-pixel)' }}
               >
                 VER ANÁLISIS →
               </Link>
             </>
           ) : (
-            <p className="text-brand-muted text-[10px] font-body">
-              Próximamente — ¡Vuelve pronto!
-            </p>
+            <p className="text-brand-muted text-[10px] font-body">Próximamente…</p>
           )}
         </div>
 
         {/* Apoyo / Donación */}
-        <div className="px-5 py-4 flex flex-col gap-3">
+        <div className="px-4 sm:px-5 py-4 flex flex-col gap-3">
           <p
             className="text-brand-purple text-[7px] tracking-widest"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             ♥ APOYA EL PROYECTO
           </p>
-          <p className="text-brand-muted text-[11px] font-body leading-relaxed">
-            Si nuestro contenido te aporta valor, considera apoyar la mazmorra. Cada colaboración nos ayuda a crear más análisis.
+          <p className="text-brand-muted text-[10px] sm:text-xs font-body leading-relaxed">
+            Si nuestro contenido te aporta valor, considera apoyar la mazmorra.
           </p>
           <div className="flex flex-col gap-2 mt-auto">
             <a
               href="https://ko-fi.com/psiquenpixel"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-4 py-2 hover:border-brand-amber hover:text-brand-amber transition-colors"
+              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-2 hover:border-brand-amber hover:text-brand-amber transition-colors"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
               ☕ KO-FI
@@ -148,7 +150,7 @@ export default function FooterPergaminos({ mazmorra }) {
               href="https://patreon.com/psiquenpixel"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-4 py-2 hover:border-brand-purple hover:text-brand-purple transition-colors"
+              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-3 py-2 hover:border-brand-purple hover:text-brand-purple transition-colors"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
               ▲ PATREON
