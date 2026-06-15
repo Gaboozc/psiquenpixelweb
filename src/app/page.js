@@ -118,23 +118,35 @@ const GAMES = [
 // ---------------------------------------------------------------------------
 export default function Home() {
   const text = useTypewriter(PHRASES);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mq.matches);
+    const handler = (e) => setReducedMotion(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   return (
     <>
       {/* ------------------------------------------------------------------ */}
       {/* Section 1: Hero with video background                               */}
       {/* ------------------------------------------------------------------ */}
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Video background */}
-        <video
-          src="/video/hero-bg.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-          aria-hidden="true"
-        />
+      <section className="relative w-full min-h-[100svh] flex items-center justify-center overflow-hidden">
+        {/* Video background — hidden when user prefers reduced motion */}
+        {!reducedMotion && (
+          <video
+            src="/video/hero-bg.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            className="absolute inset-0 w-full h-full object-cover"
+            aria-hidden="true"
+          />
+        )}
 
         {/* Dark gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-brand-bg/75 via-brand-bg/55 to-brand-bg/90" aria-hidden="true" />
@@ -152,13 +164,13 @@ export default function Home() {
             width={1200}
             height={480}
             priority
-            unoptimized
-            className="w-[140vw] sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-none sm:max-w-5xl h-auto drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
+            sizes="(max-width: 640px) 140vw, (max-width: 768px) 90vw, (max-width: 1280px) 80vw, 70vw"
+            className="w-[140vw] max-h-[55vh] sm:max-h-none sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-none sm:max-w-5xl h-auto object-contain drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
           />
 
           {/* Typewriter subtitle */}
           <p
-            className="px-4 text-brand-muted text-[8px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2rem] leading-relaxed"
+            className="px-4 text-brand-muted text-[9px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             {text}<span className="cursor-blink">█</span>
@@ -194,7 +206,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {ARTICLES.map((article) => (
               <ArticleCard key={article.slug} {...article} />
             ))}
@@ -230,7 +242,7 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {GAMES.map((game) => (
               <GameCard key={game.slug} {...game} />
             ))}

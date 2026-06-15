@@ -38,7 +38,7 @@ const Navbar = () => {
       }`}
       style={{ backgroundImage: 'url(/navbar-background.png?v=3)', backgroundSize: '100% 100%' }}
     >
-      <div className="w-full px-2 sm:px-4 xl:px-10">
+      <div className="w-full max-w-[1800px] mx-auto px-2 sm:px-4 xl:px-10">
         <div className="flex items-center h-16 sm:h-20 md:h-24 lg:h-28 xl:h-32 2xl:h-36">
 
           {/* Logo */}
@@ -48,14 +48,14 @@ const Navbar = () => {
               alt="Psique 'n' Pixel"
               width={320}
               height={100}
+              sizes="(max-width: 640px) 80px, (max-width: 768px) 96px, (max-width: 1024px) 112px, (max-width: 1280px) 128px, 160px"
               className="h-10 sm:h-12 md:h-14 lg:h-16 xl:h-20 2xl:h-24 w-auto"
               priority
-              unoptimized
             />
           </Link>
 
           {/* ── Tablet / desktop: icons fill remaining width ─────────────── */}
-          <div className="hidden sm:flex flex-1 items-center xl:-mt-4 2xl:-mt-6">
+          <div className="hidden sm:flex flex-1 items-center xl:-mt-4 2xl:-mt-3">
             {navLinks.map(({ href, label, icon }) => (
               <Link
                 key={href}
@@ -82,7 +82,7 @@ const Navbar = () => {
           <button
             onClick={() => setOpen((prev) => !prev)}
             aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
-            className="sm:hidden ml-auto transition-all duration-150 hover:scale-105 active:scale-95"
+            className="sm:hidden ml-auto h-11 flex items-center transition-all duration-150 hover:scale-105 active:scale-95"
             style={{ filter: open ? 'brightness(1.3) drop-shadow(0 0 8px rgba(155,89,247,0.8))' : 'brightness(1)' }}
           >
             <Image
@@ -121,7 +121,7 @@ const Navbar = () => {
                   alt={label}
                   width={120}
                   height={120}
-                  className="w-24 h-24 object-contain"
+                  className="w-20 h-20 object-contain"
                   unoptimized
                 />
                 <span
