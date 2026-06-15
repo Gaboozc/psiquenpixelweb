@@ -1,108 +1,106 @@
+'use client';
+
+import { useState } from 'react';
 import PageWrapper from '@/components/layout/PageWrapper';
-import Button from '@/components/ui/Button';
+import ProductCard from '@/components/merch/ProductCard';
+import CartDrawer from '@/components/merch/CartDrawer';
+import { PRODUCTS, CATEGORIES } from '@/data/products';
+import { useCart } from '@/context/CartContext';
 
-export const metadata = {
-  title: 'Merch',
-  description: "Tienda oficial de Psique 'n' Pixel — Próximamente.",
-};
+// ---------------------------------------------------------------------------
+// Floating cart button
+// ---------------------------------------------------------------------------
+function CartButton() {
+  const { count, setIsOpen } = useCart();
 
-const MERCH_ITEMS = [
-  {
-    id: 'tshirt',
-    name: 'Camiseta "Las Mazmorras de la Mente"',
-    description: 'Diseño pixel art exclusivo. 100% algodón.',
-    icon: '👕',
-  },
-  {
-    id: 'poster',
-    name: 'Póster "Árbol de Almas"',
-    description: 'Ilustración de alta resolución, 50x70 cm.',
-    icon: '🗺️',
-  },
-  {
-    id: 'mug',
-    name: 'Taza Héroe de Mazmorra',
-    description: 'Taza cerámica con diseño pixel art. 350 ml.',
-    icon: '☕',
-  },
-  {
-    id: 'stickers',
-    name: 'Pack de Pegatinas RPG',
-    description: '12 pegatinas de vinilo de personajes y símbolos.',
-    icon: '🎖️',
-  },
-];
-
-export default function MerchPage() {
   return (
-    <PageWrapper
-      title="Merch"
-      subtitle="Equipamiento del Héroe — Próximamente en la Tienda"
-      accentColor="amber"
+    <button
+      onClick={() => setIsOpen(true)}
+      aria-label={`Abrir inventario — ${count} artículos`}
+      className="fixed bottom-6 right-6 z-30 flex items-center gap-2 bg-brand-purple text-white text-[8px] tracking-widest px-4 py-3 hover:bg-brand-purple-dim transition-all duration-150 hover:-translate-y-0.5"
+      style={{ fontFamily: 'var(--font-pixel)', boxShadow: '4px 4px 0 #6b3bbf' }}
     >
-      {/* Coming soon banner */}
-      <div className="mb-12 pixel-border-amber p-8 text-center flex flex-col items-center gap-4"
-        style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+      ⚔ INVENTARIO
+      {count > 0 && (
+        <span className="bg-brand-amber text-brand-bg text-[7px] px-1.5 py-0.5 leading-none font-bold">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Merch page
+// ---------------------------------------------------------------------------
+export default function MerchPage() {
+  const [activeCategory, setActiveCategory] = useState('todos');
+
+  const filtered = activeCategory === 'todos'
+    ? PRODUCTS
+    : PRODUCTS.filter(p => p.category === activeCategory);
+
+  return (
+    <>
+      <PageWrapper
+        title="La Forja"
+        subtitle="Equipamiento oficial del Héroe de las Mazmorras"
+        accentColor="amber"
       >
-        <p
-          className="text-brand-amber text-[9px] tracking-widest"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          ⚔ FORJA EN CONSTRUCCIÓN ⚔
-        </p>
-        <h2
-          className="text-brand-text text-base md:text-lg"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          La Tienda Abre Pronto
-        </h2>
-        <p className="text-brand-muted text-sm font-body max-w-md leading-relaxed">
-          Estamos forjando el equipamiento digno de un héroe de las mazmorras de la mente.
-          Suscríbete a la newsletter para ser el primero en saber cuándo abre la tienda.
-        </p>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Button variant="secondary" href="/#newsletter">
-            NOTIFICARME ⚔
-          </Button>
-        </div>
-      </div>
 
-      {/* Preview grid */}
-      <div>
-        <p
-          className="text-brand-muted text-[9px] tracking-widest text-center mb-8"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          ▓ PRÓXIMOS ARTÍCULOS ▓
-        </p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {MERCH_ITEMS.map((item) => (
-            <div
-              key={item.id}
-              className="pixel-border p-6 flex flex-col items-center gap-4 text-center opacity-60"
-              style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        {/* ── Category filter ─────────────────────────────────────────── */}
+        <div className="flex flex-wrap gap-2 mb-10">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`text-[8px] tracking-widest px-3 py-2 border transition-colors ${
+                activeCategory === cat.id
+                  ? 'bg-brand-amber text-brand-bg border-brand-amber'
+                  : 'border-brand-border text-brand-muted hover:border-brand-amber hover:text-brand-amber'
+              }`}
+              style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              <span className="text-4xl">{item.icon}</span>
-              <h3
-                className="text-brand-text text-xs leading-snug"
-                style={{ fontFamily: 'var(--font-cinzel)' }}
-              >
-                {item.name}
-              </h3>
-              <p className="text-brand-muted text-xs font-body leading-relaxed flex-1">
-                {item.description}
-              </p>
-              <span
-                className="text-brand-border text-[8px] tracking-widest"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
-                PRÓXIMAMENTE
-              </span>
-            </div>
+              {cat.label}
+            </button>
+          ))}
+
+          {/* Result count */}
+          <span
+            className="ml-auto self-center text-brand-muted text-[8px]"
+            style={{ fontFamily: 'var(--font-pixel)' }}
+          >
+            {filtered.length} artículos
+          </span>
+        </div>
+
+        {/* ── Product grid ─────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filtered.map(product => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
-      </div>
-    </PageWrapper>
+
+        {/* ── Demo notice ──────────────────────────────────────────────── */}
+        <div
+          className="mt-14 pixel-border-purple p-5 text-center"
+          style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
+          <p
+            className="text-brand-purple text-[8px] tracking-widest mb-1"
+            style={{ fontFamily: 'var(--font-pixel)' }}
+          >
+            ⚠ MODO DEMO
+          </p>
+          <p className="text-brand-muted text-xs font-body">
+            Tienda en construcción — sin pasarela de pago real. Los artículos son mockup.
+          </p>
+        </div>
+
+      </PageWrapper>
+
+      <CartDrawer />
+      <CartButton />
+    </>
   );
 }

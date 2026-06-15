@@ -3,6 +3,7 @@ import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry';
+import { CartProvider } from '@/context/CartContext';
 
 const pressStart2P = Press_Start_2P({
   weight: '400',
@@ -64,9 +65,11 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-screen flex flex-col text-brand-text antialiased dungeon-bg">
         <StyledComponentsRegistry>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </CartProvider>
         </StyledComponentsRegistry>
       </body>
     </html>
