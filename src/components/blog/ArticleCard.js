@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Badge from '@/components/ui/Badge';
+import { formatDate } from '@/lib/format';
 
 const ArticleCard = ({ title, excerpt, slug, date, tags = [], category }) => (
   <Link href={`/blog/${slug}`} className="block group">
@@ -37,7 +38,7 @@ const ArticleCard = ({ title, excerpt, slug, date, tags = [], category }) => (
               className="text-brand-muted text-[8px]"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              {date}
+              {formatDate(date)}
             </span>
           )}
         </div>

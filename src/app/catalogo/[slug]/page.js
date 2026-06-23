@@ -1,44 +1,52 @@
+import { notFound } from 'next/navigation';
 import PixelDivider from '@/components/ui/PixelDivider';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
+import { getGameBySlug, getAllGames } from '@/lib/catalog';
+import { formatDate } from '@/lib/format';
 
-// Placeholder — replace with getGameBySlug() from @/lib/catalog
-const PLACEHOLDER = {
-  title:   'Análisis en construcción',
-  game:    'Título del juego',
-  excerpt: 'Este análisis estará disponible próximamente.',
-  date:    '2025-01-01',
-  genre:   ['RPG'],
-  tags:    [],
-  content: '<p>Contenido del análisis aquí.</p>',
-};
+export async function generateStaticParams() {
+  const games = getAllGames();
+  return games.map((game) => ({ slug: game.slug }));
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+  const game = getGameBySlug(slug);
+  if (!game) return { title: 'Análisis no encontrado' };
   return {
-    title:       `${PLACEHOLDER.game} — ${PLACEHOLDER.title}`,
-    description: PLACEHOLDER.excerpt,
+    title: `${game.game} — ${game.title}`,
+    description: game.excerpt,
+    openGraph: {
+      title: `${game.game} — ${game.title}`,
+      description: game.excerpt,
+      images: game.coverImage ? [{ url: game.coverImage }] : [{ url: '/og-image.png' }],
+    },
   };
 }
 
 export default async function GameAnalysisPage({ params }) {
   const { slug } = await params;
-  const game = PLACEHOLDER;
+  const game = getGameBySlug(slug);
+
+  if (!game) notFound();
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
       {/* Header */}
       <header className="mb-10">
         <div className="flex items-center gap-3 mb-4 flex-wrap">
-          {game.genre.map((g) => (
+          {game.genre?.map((g) => (
             <Badge key={g} color="amber">{g}</Badge>
           ))}
-          <span
-            className="text-brand-muted text-[8px]"
-            style={{ fontFamily: 'var(--font-pixel)' }}
-          >
-            {game.date}
-          </span>
+          {game.date && (
+            <span
+              className="text-brand-muted text-[8px]"
+              style={{ fontFamily: 'var(--font-pixel)' }}
+            >
+              {formatDate(game.date)}
+            </span>
+          )}
         </div>
 
         <p
@@ -70,7 +78,7 @@ export default async function GameAnalysisPage({ params }) {
 
       {/* Footer */}
       <div className="mt-16 pt-8 border-t border-brand-border">
-        {game.tags.length > 0 && (
+        {game.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             {game.tags.map((tag) => (
               <Badge key={tag} color="muted">#{tag}</Badge>

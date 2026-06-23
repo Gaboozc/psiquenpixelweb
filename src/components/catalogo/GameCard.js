@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Badge from '@/components/ui/Badge';
+import { formatDate } from '@/lib/format';
 
 const GameCard = ({ title, game, excerpt, slug, date, genre = [], tags = [] }) => (
   <Link href={`/catalogo/${slug}`} className="block group">
@@ -37,7 +38,7 @@ const GameCard = ({ title, game, excerpt, slug, date, genre = [], tags = [] }) =
               className="text-brand-muted text-[8px]"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              {date}
+              {formatDate(date)}
             </span>
           )}
         </div>
