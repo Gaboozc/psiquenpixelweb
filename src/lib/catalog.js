@@ -15,6 +15,7 @@ export const getAllGames = ({ limit } = {}) => {
       const { data } = matter(raw);
       return { ...data, slug: data.slug ?? filename.replace('.md', '') };
     })
+    .filter((g) => g.published !== false)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return limit ? games.slice(0, limit) : games;

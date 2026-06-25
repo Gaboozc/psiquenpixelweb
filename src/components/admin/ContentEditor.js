@@ -72,6 +72,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
     tags:       (initial?.tags ?? []).join(', '),
     coverImage: initial?.coverImage ?? '',
     content:    initial?.content    ?? '',
+    published:  initial?.published  ?? true,
   });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -147,6 +148,21 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           <Field label="CONTENIDO (Markdown)">
             <textarea value={form.content} onChange={set('content')} className="admin-textarea" placeholder="## Título&#10;&#10;Contenido en Markdown..." />
           </Field>
+
+          <label className="flex items-center gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={form.published}
+              onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))}
+              className="w-4 h-4 accent-brand-purple"
+            />
+            <span className="text-brand-text text-xs font-body">
+              Publicado{' '}
+              <span className="text-brand-muted">
+                {form.published ? '— visible en el sitio' : '— borrador, no visible'}
+              </span>
+            </span>
+          </label>
         </>
       )}
 
@@ -182,6 +198,7 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
     tags:       (initial?.tags ?? []).join(', '),
     coverImage: initial?.coverImage ?? '',
     content:    initial?.content    ?? '',
+    published:  initial?.published  ?? true,
   });
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
@@ -261,6 +278,21 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
           <Field label="CONTENIDO (Markdown)">
             <textarea value={form.content} onChange={set('content')} className="admin-textarea" placeholder="## Título&#10;&#10;Contenido en Markdown..." />
           </Field>
+
+          <label className="flex items-center gap-3 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={form.published}
+              onChange={(e) => setForm((f) => ({ ...f, published: e.target.checked }))}
+              className="w-4 h-4 accent-brand-amber"
+            />
+            <span className="text-brand-text text-xs font-body">
+              Publicado{' '}
+              <span className="text-brand-muted">
+                {form.published ? '— visible en el catálogo' : '— borrador, no visible'}
+              </span>
+            </span>
+          </label>
         </>
       )}
 

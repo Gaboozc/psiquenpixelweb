@@ -15,6 +15,7 @@ export const getAllPosts = ({ limit } = {}) => {
       const { data } = matter(raw);
       return { ...data, slug: data.slug ?? filename.replace('.md', '') };
     })
+    .filter((p) => p.published !== false)
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   return limit ? posts.slice(0, limit) : posts;

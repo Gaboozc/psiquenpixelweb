@@ -5,19 +5,25 @@ import Link from 'next/link';
 import { ap } from '@/lib/adminPath';
 
 async function getStats() {
-  const blogDir = path.join(process.cwd(), 'src', 'content', 'blog');
-  const catDir = path.join(process.cwd(), 'src', 'content', 'catalogo');
-  const mazFile = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
+  const blogDir    = path.join(process.cwd(), 'src', 'content', 'blog');
+  const catDir     = path.join(process.cwd(), 'src', 'content', 'catalogo');
+  const mazFile    = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
+  const nlFile     = path.join(process.cwd(), 'src', 'data', 'newsletter.json');
 
-  const [blogFiles, catFiles, mazRaw] = await Promise.all([
+  const [blogFiles, catFiles, mazRaw, nlRaw] = await Promise.all([
     fs.readdir(blogDir).catch(() => []),
     fs.readdir(catDir).catch(() => []),
     fs.readFile(mazFile, 'utf8').catch(() => 'null'),
+    fs.readFile(nlFile,  'utf8').catch(() => '[]'),
   ]);
+
+  let subscribers = 0;
+  try { subscribers = JSON.parse(nlRaw).length; } catch { /* empty */ }
 
   return {
     posts: blogFiles.filter((f) => f.endsWith('.md')).length,
     games: catFiles.filter((f) => f.endsWith('.md')).length,
+    subscribers,
     mazmorra: JSON.parse(mazRaw),
   };
 }
@@ -52,7 +58,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         <StatCard label="POSTS" value={stats.posts} href={ap('/posts')} color="text-brand-purple" />
         <StatCard label="CATÁLOGO" value={stats.games} href={ap('/catalogo')} color="text-brand-amber" />
-        <StatCard label="SUSCRIPTORES" value="—" href={ap()} color="text-brand-muted" />
+        <StatCard label="SUSCRIPTORES" value={stats.subscribers} href={ap('/newsletter')} color="text-green-400" />
       </div>
 
       {/* Quick actions */}
