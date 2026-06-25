@@ -1,20 +1,28 @@
 import PageWrapper from '@/components/layout/PageWrapper';
-import YoutubeEmbed from '@/components/media/YoutubeEmbed';
-import SpotifyEmbed from '@/components/media/SpotifyEmbed';
 
 export const metadata = {
   title: 'Media',
   description: "Vídeos de YouTube y episodios de podcast de Psique 'n' Pixel.",
 };
 
-// Demo video IDs — swap for real ones when available
-const YOUTUBE_VIDEOS = [
-  { id: 'dQw4w9WgXcQ', title: 'Análisis: Dark Souls y el Duelo — Psique \'n\' Pixel' },
-  { id: 'dQw4w9WgXcQ', title: 'Episodio piloto: Hades y la Terapia de Repetición' },
-];
-
-// Demo Spotify show ID
-const SPOTIFY_SHOW_ID = '37i9dQZF1DX8NTLI2TtZa6'; // demo: placeholder show
+function ComingSoonSlot({ icon, color }) {
+  return (
+    <div
+      className={`w-full aspect-video pixel-border flex flex-col items-center justify-center gap-3`}
+      style={{
+        backgroundImage: `
+          repeating-linear-gradient(45deg, #16151a 0, #16151a 4px, #0d0d0f 4px, #0d0d0f 8px),
+          repeating-linear-gradient(-45deg, ${color}08 0, ${color}08 2px, transparent 2px, transparent 6px)
+        `,
+      }}
+    >
+      <span className="text-3xl opacity-20">{icon}</span>
+      <p className="text-brand-border text-[8px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>
+        PRÓXIMAMENTE
+      </p>
+    </div>
+  );
+}
 
 export default function MediaPage() {
   return (
@@ -23,16 +31,6 @@ export default function MediaPage() {
       subtitle="Contenido en vídeo y audio — Las Mazmorras de la Mente"
       accentColor="purple"
     >
-      {/* Demo notice */}
-      <div
-        className="mb-12 pixel-border p-4 text-center"
-        style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-      >
-        <p className="text-brand-muted text-[8px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>
-          ⚠ MODO DEMO — IDs de vídeo de prueba hasta integración real
-        </p>
-      </div>
-
       <div className="space-y-16">
 
         {/* ── YouTube ────────────────────────────────────────────────────── */}
@@ -85,11 +83,7 @@ export default function MediaPage() {
               </a>
             </div>
 
-            <div className="flex flex-col gap-6">
-              {YOUTUBE_VIDEOS.map((video) => (
-                <YoutubeEmbed key={video.id + video.title} videoId={video.id} title={video.title} />
-              ))}
-            </div>
+            <ComingSoonSlot icon="▶" color="#9b59f7" />
           </div>
         </section>
 
@@ -144,7 +138,7 @@ export default function MediaPage() {
               </a>
             </div>
 
-            <SpotifyEmbed spotifyId={SPOTIFY_SHOW_ID} type="show" title="Las Mazmorras de la Mente — Podcast" />
+            <ComingSoonSlot icon="♫" color="#e8903a" />
           </div>
         </section>
 
