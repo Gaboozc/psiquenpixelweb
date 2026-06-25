@@ -1,31 +1,39 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import Badge from '@/components/ui/Badge';
 import { formatDate } from '@/lib/format';
 
-const ArticleCard = ({ title, excerpt, slug, date, tags = [], category }) => (
+const ArticleCard = ({ title, excerpt, slug, date, tags = [], category, coverImage }) => (
   <Link href={`/blog/${slug}`} className="block group">
     <article
       className="pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-purple"
       style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
 
-      {/* Thumbnail placeholder — pixel art pattern via CSS */}
-      <div
-        className="w-full h-36 bg-brand-bg flex items-center justify-center overflow-hidden"
-        style={{
-          backgroundImage: `
-            repeating-linear-gradient(45deg, #16151a 0, #16151a 4px, #0d0d0f 4px, #0d0d0f 8px),
-            repeating-linear-gradient(-45deg, rgba(155,89,247,0.05) 0, rgba(155,89,247,0.05) 2px, transparent 2px, transparent 6px)
-          `,
-        }}
-        aria-hidden="true"
-      >
-        <span
-          className="text-brand-border text-[10px]"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          ▓▓▓
-        </span>
+      {/* Thumbnail — cover image if available, pixel art pattern otherwise */}
+      <div className="w-full h-36 bg-brand-bg overflow-hidden relative">
+        {coverImage ? (
+          <Image
+            src={coverImage}
+            alt={title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover opacity-80 group-hover:opacity-100 transition-opacity"
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(45deg, #16151a 0, #16151a 4px, #0d0d0f 4px, #0d0d0f 8px),
+                repeating-linear-gradient(-45deg, rgba(155,89,247,0.05) 0, rgba(155,89,247,0.05) 2px, transparent 2px, transparent 6px)
+              `,
+            }}
+            aria-hidden="true"
+          >
+            <span className="text-brand-border text-[10px]" style={{ fontFamily: 'var(--font-pixel)' }}>▓▓▓</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}

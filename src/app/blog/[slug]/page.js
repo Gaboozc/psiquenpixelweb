@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import PixelDivider from '@/components/ui/PixelDivider';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { getPostBySlug, getAllPosts } from '@/lib/posts';
+import { getPostBySlug, getAllPosts, getAdjacentPosts } from '@/lib/posts';
 import { formatDate } from '@/lib/format';
 
 export async function generateStaticParams() {
@@ -30,6 +30,8 @@ export default async function ArticlePage({ params }) {
   const post = getPostBySlug(slug);
 
   if (!post) notFound();
+
+  const { prev, next } = getAdjacentPosts(slug);
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
@@ -76,6 +78,33 @@ export default async function ArticlePage({ params }) {
             ))}
           </div>
         )}
+
+        {/* Prev / Next navigation */}
+        {(prev || next) && (
+          <nav className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8" aria-label="Navegación entre artículos">
+            {prev ? (
+              <a
+                href={`/blog/${prev.slug}`}
+                className="pixel-border p-4 flex flex-col gap-1 hover:-translate-y-0.5 transition-transform"
+                style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+              >
+                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>← ANTERIOR</span>
+                <span className="text-brand-text text-xs font-body line-clamp-2 leading-snug">{prev.title}</span>
+              </a>
+            ) : <div />}
+            {next ? (
+              <a
+                href={`/blog/${next.slug}`}
+                className="pixel-border p-4 flex flex-col gap-1 items-end text-right hover:-translate-y-0.5 transition-transform"
+                style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+              >
+                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>SIGUIENTE →</span>
+                <span className="text-brand-text text-xs font-body line-clamp-2 leading-snug">{next.title}</span>
+              </a>
+            ) : <div />}
+          </nav>
+        )}
+
         <Button variant="primary" href="/blog">
           ← VOLVER AL BLOG
         </Button>

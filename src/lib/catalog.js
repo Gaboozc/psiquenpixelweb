@@ -20,6 +20,17 @@ export const getAllGames = ({ limit } = {}) => {
   return limit ? games.slice(0, limit) : games;
 };
 
+// Return { prev, next } neighbors for a slug (sorted newest-first, so prev=older, next=newer)
+export const getAdjacentGames = (slug) => {
+  const games = getAllGames();
+  const idx = games.findIndex((g) => g.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    next: idx > 0 ? games[idx - 1] : null,
+    prev: idx < games.length - 1 ? games[idx + 1] : null,
+  };
+};
+
 // Read a single game analysis with full HTML content (markdown converted)
 export const getGameBySlug = (slug) => {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);

@@ -20,6 +20,17 @@ export const getAllPosts = ({ limit } = {}) => {
   return limit ? posts.slice(0, limit) : posts;
 };
 
+// Return { prev, next } neighbors for a slug (sorted newest-first, so prev=older, next=newer)
+export const getAdjacentPosts = (slug) => {
+  const posts = getAllPosts();
+  const idx = posts.findIndex((p) => p.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+  return {
+    next: idx > 0 ? posts[idx - 1] : null,
+    prev: idx < posts.length - 1 ? posts[idx + 1] : null,
+  };
+};
+
 // Read a single post with full HTML content (markdown converted)
 export const getPostBySlug = (slug) => {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);
