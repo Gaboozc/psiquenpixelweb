@@ -9,7 +9,7 @@ const StyledWrapper = styled.div`
     --stone-800: #292524;
     --yellow-400: #facc15;
 
-    font-family: "Rubik", sans-serif;
+    font-family: var(--font-body), sans-serif;
     cursor: pointer;
     position: relative;
     display: inline-flex;

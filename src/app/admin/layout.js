@@ -6,10 +6,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ADMIN_BASE, ap } from '@/lib/adminPath';
 
 const NAV_ITEMS = [
-  { href: ap(),           label: 'Dashboard',        icon: '⊞', exact: true },
-  { href: ap('/posts'),   label: 'Posts',             icon: '✦' },
-  { href: ap('/catalogo'),label: 'Catálogo',          icon: '⚔' },
-  { href: ap('/mazmorra'),label: 'Mazmorra Semana',   icon: '★' },
+  { href: ap(),              label: 'Dashboard',        icon: '⊞', exact: true },
+  { href: ap('/posts'),      label: 'Posts',             icon: '✦' },
+  { href: ap('/catalogo'),   label: 'Catálogo',          icon: '⚔' },
+  { href: ap('/mazmorra'),   label: 'Mazmorra Semana',   icon: '★' },
+  { href: ap('/newsletter'), label: 'Newsletter',        icon: '✉' },
 ];
 
 function AdminSidebar({ onClose }) {

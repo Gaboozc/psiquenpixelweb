@@ -1,51 +1,39 @@
 import PageWrapper from '@/components/layout/PageWrapper';
 import ArticleCard from '@/components/blog/ArticleCard';
+import { getAllPosts } from '@/lib/posts';
 
 export const metadata = {
   title: 'Posts',
   description: 'Artículos de análisis psicológico, narrativo y cultural de videojuegos.',
 };
 
-// Placeholder data — replace with getAllPosts() from @/lib/posts
-const ARTICLES = [
-  {
-    slug:     'zelda-disociacion',
-    title:    'Link y la Disociación: Héroes sin Yo',
-    excerpt:  'Exploramos cómo la amnesia recurrente de Link en la saga Zelda refleja mecanismos psicológicos de disociación y la construcción fragmentada de la identidad heroica.',
-    date:     '2025-04-10',
-    category: 'Psicología',
-    tags:     ['zelda', 'identidad', 'disociacion'],
-  },
-  {
-    slug:     'dark-souls-duelo',
-    title:    'Dark Souls como Metáfora del Duelo',
-    excerpt:  'Las hogueras, los huecos y la persistencia en Dark Souls no son solo mecánicas de juego; son una alegoría perfecta de las cinco etapas del duelo.',
-    date:     '2025-03-22',
-    category: 'Narrativa',
-    tags:     ['dark-souls', 'duelo', 'fromsoft'],
-  },
-  {
-    slug:     'hades-terapia',
-    title:    '¿Puede Hades reemplazar a un terapeuta?',
-    excerpt:  'El rogue-like de Supergiant Games usa la repetición como catarsis. Analizamos cómo sus sistemas narrativos imitan procesos terapéuticos reales.',
-    date:     '2025-02-15',
-    category: 'Análisis',
-    tags:     ['hades', 'terapia', 'roguelike'],
-  },
-];
-
 export default function PostsPage() {
+  const posts = getAllPosts();
+
   return (
     <PageWrapper
       title="Posts"
       subtitle="Análisis psicológico, narrativo y cultural de videojuegos"
       accentColor="purple"
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {ARTICLES.map((article) => (
-          <ArticleCard key={article.slug} {...article} />
-        ))}
-      </div>
+      {posts.length === 0 ? (
+        <div className="pixel-border-purple p-12 text-center flex flex-col items-center gap-4"
+          style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+        >
+          <p className="text-brand-purple text-[9px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>
+            ▓▓▓
+          </p>
+          <p className="text-brand-muted text-sm font-body">
+            El héroe está forjando el contenido. Vuelve pronto.
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {posts.map((post) => (
+            <ArticleCard key={post.slug} {...post} />
+          ))}
+        </div>
+      )}
     </PageWrapper>
   );
 }

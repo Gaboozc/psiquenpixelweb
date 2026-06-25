@@ -46,7 +46,7 @@ function NewsletterForm() {
           <button
             type="submit"
             disabled={status === 'loading'}
-            className="shrink-0 bg-brand-purple text-white text-[8px] tracking-widest px-4 py-2 hover:bg-brand-purple-dim transition-colors disabled:opacity-50"
+            className="shrink-0 bg-brand-purple text-white text-[8px] tracking-widest px-4 py-2.5 hover:bg-brand-purple-dim transition-colors disabled:opacity-50"
             style={{ fontFamily: 'var(--font-pixel)', boxShadow: '3px 3px 0 #6b3bbf' }}
           >
             {status === 'loading' ? '...' : 'ENVIAR'}
@@ -72,7 +72,7 @@ export default function FooterPergaminos({ mazmorra }) {
       {/* ── TOP: Newsletter ────────────────────────────────────────── */}
       <div className="px-4 sm:px-6 py-4 border-b border-brand-border/60">
         <p
-          className="text-brand-purple text-[7px] sm:text-[8px] tracking-widest mb-1"
+          className="text-brand-purple text-[8px] sm:text-[8px] tracking-widest mb-1"
           style={{ fontFamily: 'var(--font-pixel)' }}
         >
           ✦ PERGAMINOS DE LA MAZMORRA ✦
@@ -95,7 +95,7 @@ export default function FooterPergaminos({ mazmorra }) {
         {/* Mazmorra de la Semana */}
         <div className="px-4 sm:px-5 py-4 flex flex-col gap-2">
           <p
-            className="text-brand-amber text-[7px] tracking-widest"
+            className="text-brand-amber text-[8px] tracking-widest"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             ⚔ MAZMORRA DE LA SEMANA
@@ -128,7 +128,7 @@ export default function FooterPergaminos({ mazmorra }) {
         {/* Apoyo / Donación */}
         <div className="px-4 sm:px-5 py-4 flex flex-col gap-3">
           <p
-            className="text-brand-purple text-[7px] tracking-widest"
+            className="text-brand-purple text-[8px] tracking-widest"
             style={{ fontFamily: 'var(--font-pixel)' }}
           >
             ♥ APOYA EL PROYECTO
@@ -141,7 +141,7 @@ export default function FooterPergaminos({ mazmorra }) {
               href="https://ko-fi.com/psiquenpixel"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-2 hover:border-brand-amber hover:text-brand-amber transition-colors"
+              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-3 hover:border-brand-amber hover:text-brand-amber transition-colors"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
               ☕ KO-FI
@@ -150,7 +150,7 @@ export default function FooterPergaminos({ mazmorra }) {
               href="https://patreon.com/psiquenpixel"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-3 py-2 hover:border-brand-purple hover:text-brand-purple transition-colors"
+              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-3 py-3 hover:border-brand-purple hover:text-brand-purple transition-colors"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
               ▲ PATREON

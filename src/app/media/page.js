@@ -5,6 +5,25 @@ export const metadata = {
   description: "Vídeos de YouTube y episodios de podcast de Psique 'n' Pixel.",
 };
 
+function ComingSoonSlot({ icon, color }) {
+  return (
+    <div
+      className={`w-full aspect-video pixel-border flex flex-col items-center justify-center gap-3`}
+      style={{
+        backgroundImage: `
+          repeating-linear-gradient(45deg, #16151a 0, #16151a 4px, #0d0d0f 4px, #0d0d0f 8px),
+          repeating-linear-gradient(-45deg, ${color}08 0, ${color}08 2px, transparent 2px, transparent 6px)
+        `,
+      }}
+    >
+      <span className="text-3xl opacity-20">{icon}</span>
+      <p className="text-brand-border text-[8px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>
+        PRÓXIMAMENTE
+      </p>
+    </div>
+  );
+}
+
 export default function MediaPage() {
   return (
     <PageWrapper
@@ -14,7 +33,7 @@ export default function MediaPage() {
     >
       <div className="space-y-16">
 
-        {/* YouTube section */}
+        {/* ── YouTube ────────────────────────────────────────────────────── */}
         <section>
           <div className="flex items-center gap-4 mb-6">
             <div className="w-1 h-8 bg-brand-purple" />
@@ -33,70 +52,44 @@ export default function MediaPage() {
                 Suscríbete para no perderte ningún episodio.
               </p>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 pixel-border p-3"
-                  style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                  <span className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>▶</span>
-                  <div>
-                    <p className="text-brand-text text-xs font-body font-medium">Análisis en profundidad</p>
-                    <p className="text-brand-muted text-[10px] font-body">Disecciones de narrativa y psicología</p>
+              <div className="flex flex-col gap-3 mb-6">
+                {[
+                  ['▶', 'Análisis en profundidad', 'Disecciones de narrativa y psicología'],
+                  ['▶', 'Ensayos visuales',        'Documentales cortos sobre cultura gamer'],
+                  ['▶', 'Debates y reseñas',       'Conversaciones sobre los juegos del momento'],
+                ].map(([icon, label, desc]) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-3 pixel-border p-3"
+                    style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                  >
+                    <span className="text-brand-purple text-[8px] shrink-0" style={{ fontFamily: 'var(--font-pixel)' }}>{icon}</span>
+                    <div>
+                      <p className="text-brand-text text-xs font-body font-medium">{label}</p>
+                      <p className="text-brand-muted text-[10px] font-body">{desc}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 pixel-border p-3"
-                  style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                  <span className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>▶</span>
-                  <div>
-                    <p className="text-brand-text text-xs font-body font-medium">Ensayos visuales</p>
-                    <p className="text-brand-muted text-[10px] font-body">Documentales cortos sobre cultura gamer</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 pixel-border p-3"
-                  style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                  <span className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>▶</span>
-                  <div>
-                    <p className="text-brand-text text-xs font-body font-medium">Debates y reseñas</p>
-                    <p className="text-brand-muted text-[10px] font-body">Conversaciones sobre los juegos del momento</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
 
-            <div
-              className="pixel-border-purple p-6 flex flex-col items-center justify-center gap-4 min-h-[280px]"
-              style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-            >
-              <div className="w-16 h-16 bg-brand-purple/20 border-2 border-brand-purple flex items-center justify-center">
-                <span className="text-brand-purple text-2xl">▶</span>
-              </div>
-              <p
-                className="text-brand-muted text-[9px] tracking-widest text-center"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
-                PRÓXIMAMENTE EN YOUTUBE
-              </p>
-              <p className="text-brand-border text-xs font-body text-center">
-                Canal en construcción — Suscríbete para ser el primero en verlo
-              </p>
               <a
                 href="https://youtube.com/@psiquenpixel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-purple text-[9px] tracking-widest border border-brand-purple px-4 py-2 hover:bg-brand-purple/20 transition-colors"
+                className="inline-block text-brand-purple text-[9px] tracking-widest border border-brand-purple px-4 py-2 hover:bg-brand-purple/20 transition-colors"
                 style={{ fontFamily: 'var(--font-pixel)' }}
               >
-                SUSCRIBIRSE →
+                SUSCRIBIRSE AL CANAL →
               </a>
             </div>
+
+            <ComingSoonSlot icon="▶" color="#9b59f7" />
           </div>
         </section>
 
-        {/* Divider */}
         <div className="border-t border-brand-border" />
 
-        {/* Spotify section */}
+        {/* ── Spotify ────────────────────────────────────────────────────── */}
         <section>
           <div className="flex items-center gap-4 mb-6">
             <div className="w-1 h-8 bg-brand-amber" />
@@ -112,57 +105,40 @@ export default function MediaPage() {
             <div>
               <p className="text-brand-muted text-sm font-body leading-relaxed mb-6">
                 El podcast de Las Mazmorras de la Mente: conversaciones profundas sobre narrativa,
-                psicología y cultura de los videojuegos. Disponible próximamente.
+                psicología y cultura de los videojuegos.
               </p>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center gap-3 pixel-border p-3"
-                  style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                  <span className="text-brand-amber text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>♫</span>
-                  <div>
-                    <p className="text-brand-text text-xs font-body font-medium">Episodios de análisis</p>
-                    <p className="text-brand-muted text-[10px] font-body">Profundidad sin prisa</p>
+              <div className="flex flex-col gap-3 mb-6">
+                {[
+                  ['♫', 'Episodios de análisis', 'Profundidad sin prisa'],
+                  ['♫', 'Entrevistas',            'Desarrolladores, psicólogos y críticos'],
+                ].map(([icon, label, desc]) => (
+                  <div
+                    key={label}
+                    className="flex items-center gap-3 pixel-border p-3"
+                    style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+                  >
+                    <span className="text-brand-amber text-[8px] shrink-0" style={{ fontFamily: 'var(--font-pixel)' }}>{icon}</span>
+                    <div>
+                      <p className="text-brand-text text-xs font-body font-medium">{label}</p>
+                      <p className="text-brand-muted text-[10px] font-body">{desc}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-3 pixel-border p-3"
-                  style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                  <span className="text-brand-amber text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>♫</span>
-                  <div>
-                    <p className="text-brand-text text-xs font-body font-medium">Entrevistas</p>
-                    <p className="text-brand-muted text-[10px] font-body">Desarrolladores, psicólogos y críticos</p>
-                  </div>
-                </div>
+                ))}
               </div>
-            </div>
 
-            <div
-              className="pixel-border-amber p-6 flex flex-col items-center justify-center gap-4 min-h-[280px]"
-              style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-            >
-              <div className="w-16 h-16 bg-brand-amber/20 border-2 border-brand-amber flex items-center justify-center">
-                <span className="text-brand-amber text-2xl">♫</span>
-              </div>
-              <p
-                className="text-brand-muted text-[9px] tracking-widest text-center"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
-                PODCAST PRÓXIMAMENTE
-              </p>
-              <p className="text-brand-border text-xs font-body text-center">
-                Las Mazmorras de la Mente en audio — Pronto en Spotify
-              </p>
               <a
                 href="https://open.spotify.com/show/psiquenpixel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-amber text-[9px] tracking-widest border border-brand-amber px-4 py-2 hover:bg-brand-amber/20 transition-colors"
+                className="inline-block text-brand-amber text-[9px] tracking-widest border border-brand-amber px-4 py-2 hover:bg-brand-amber/20 transition-colors"
                 style={{ fontFamily: 'var(--font-pixel)' }}
               >
                 SEGUIR EN SPOTIFY →
               </a>
             </div>
+
+            <ComingSoonSlot icon="♫" color="#e8903a" />
           </div>
         </section>
 
