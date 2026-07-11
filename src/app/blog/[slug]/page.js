@@ -1,9 +1,16 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import PixelDivider from '@/components/ui/PixelDivider';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { getPostBySlug, getAllPosts, getAdjacentPosts } from '@/lib/posts';
+import TableOfContents from '@/components/blog/TableOfContents';
+import RelatedContent from '@/components/blog/RelatedContent';
+import ShareButtons from '@/components/ui/ShareButtons';
+import XpButton from '@/components/ui/XpButton';
+import { getPostBySlug, getAllPosts, getAdjacentPosts, getRelatedPosts } from '@/lib/posts';
 import { formatDate } from '@/lib/format';
+
+const SITE = 'https://psiquenpixel.com';
 
 export async function generateStaticParams() {
   const posts = getAllPosts();
@@ -20,6 +27,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      type: 'article',
       images: post.coverImage ? [{ url: post.coverImage }] : [{ url: '/og-image.png' }],
     },
   };
@@ -32,9 +40,29 @@ export default async function ArticlePage({ params }) {
   if (!post) notFound();
 
   const { prev, next } = getAdjacentPosts(slug);
+  const related = getRelatedPosts(slug);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    dateModified: post.date,
+    author: { '@type': 'Organization', name: "Psique 'n' Pixel" },
+    publisher: { '@type': 'Organization', name: "Psique 'n' Pixel" },
+    image: post.coverImage ? `${SITE}${post.coverImage}` : `${SITE}/og-image.png`,
+    mainEntityOfPage: `${SITE}/blog/${post.slug}`,
+    keywords: (post.tags ?? []).join(', '),
+  };
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Header */}
       <header className="mb-10">
         <div className="flex items-center gap-3 mb-6 flex-wrap">
@@ -47,6 +75,12 @@ export default async function ArticlePage({ params }) {
               {formatDate(post.date)}
             </span>
           )}
+          <span
+            className="text-brand-muted text-[8px]"
+            style={{ fontFamily: 'var(--font-pixel)' }}
+          >
+            ☄ {post.readingTime} min de lectura
+          </span>
         </div>
 
         <h1
@@ -63,9 +97,12 @@ export default async function ArticlePage({ params }) {
 
       <PixelDivider className="mb-10" />
 
+      {/* Table of contents */}
+      <TableOfContents headings={post.headings} accentColor="purple" />
+
       {/* Body */}
       <div
-        className="prose prose-invert prose-purple max-w-none font-body text-brand-text leading-relaxed"
+        className="prose prose-invert prose-purple max-w-none font-body text-brand-text leading-relaxed scroll-smooth"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
@@ -74,10 +111,18 @@ export default async function ArticlePage({ params }) {
         {post.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             {post.tags.map((tag) => (
-              <Badge key={tag} color="muted">#{tag}</Badge>
+              <Link key={tag} href={`/blog/tag/${encodeURIComponent(tag.toLowerCase())}`}>
+                <Badge color="muted" className="hover:text-brand-text transition-colors">#{tag}</Badge>
+              </Link>
             ))}
           </div>
         )}
+
+        {/* Share + XP */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
+          <ShareButtons title={post.title} accentColor="purple" />
+          <XpButton slug={post.slug} accentColor="purple" />
+        </div>
 
         {/* Prev / Next navigation */}
         {(prev || next) && (
@@ -109,6 +154,9 @@ export default async function ArticlePage({ params }) {
           ← VOLVER AL BLOG
         </Button>
       </div>
+
+      {/* Related posts */}
+      <RelatedContent items={related} type="post" accentColor="purple" />
     </article>
   );
 }

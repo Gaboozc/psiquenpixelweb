@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
+import { readingTime, withHeadingIds } from './reading';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'blog');
 
@@ -32,6 +33,40 @@ export const getAdjacentPosts = (slug) => {
   };
 };
 
+// Posts sharing the most tags with the given slug (excludes drafts and itself)
+export const getRelatedPosts = (slug, limit = 3) => {
+  const posts = getAllPosts();
+  const current = posts.find((p) => p.slug === slug);
+  if (!current) return [];
+  const currentTags = new Set(current.tags ?? []);
+
+  return posts
+    .filter((p) => p.slug !== slug)
+    .map((p) => ({
+      post: p,
+      score: (p.tags ?? []).filter((t) => currentTags.has(t)).length,
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || new Date(b.post.date) - new Date(a.post.date))
+    .slice(0, limit)
+    .map((x) => x.post);
+};
+
+// Unique, sorted list of all tags across published posts
+export const getAllTags = () => {
+  const tags = new Set();
+  getAllPosts().forEach((p) => (p.tags ?? []).forEach((t) => tags.add(t)));
+  return [...tags].sort((a, b) => a.localeCompare(b, 'es'));
+};
+
+// All published posts carrying a given tag (case-insensitive)
+export const getPostsByTag = (tag) => {
+  const needle = String(tag).toLowerCase();
+  return getAllPosts().filter((p) =>
+    (p.tags ?? []).some((t) => t.toLowerCase() === needle),
+  );
+};
+
 // Read a single post with full HTML content (markdown converted)
 export const getPostBySlug = (slug) => {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);
@@ -41,5 +76,13 @@ export const getPostBySlug = (slug) => {
   const raw = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(raw);
 
-  return { ...data, slug, content: marked.parse(content) };
+  const { html, headings } = withHeadingIds(marked.parse(content));
+
+  return {
+    ...data,
+    slug,
+    content: html,
+    headings,
+    readingTime: readingTime(content),
+  };
 };

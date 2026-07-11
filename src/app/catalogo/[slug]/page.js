@@ -1,9 +1,16 @@
 import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import PixelDivider from '@/components/ui/PixelDivider';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
-import { getGameBySlug, getAllGames, getAdjacentGames } from '@/lib/catalog';
+import TableOfContents from '@/components/blog/TableOfContents';
+import RelatedContent from '@/components/blog/RelatedContent';
+import ShareButtons from '@/components/ui/ShareButtons';
+import XpButton from '@/components/ui/XpButton';
+import { getGameBySlug, getAllGames, getAdjacentGames, getRelatedGames } from '@/lib/catalog';
 import { formatDate } from '@/lib/format';
+
+const SITE = 'https://psiquenpixel.com';
 
 export async function generateStaticParams() {
   const games = getAllGames();
@@ -20,6 +27,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: `${game.game} — ${game.title}`,
       description: game.excerpt,
+      type: 'article',
       images: game.coverImage ? [{ url: game.coverImage }] : [{ url: '/og-image.png' }],
     },
   };
@@ -32,9 +40,30 @@ export default async function GameAnalysisPage({ params }) {
   if (!game) notFound();
 
   const { prev, next } = getAdjacentGames(slug);
+  const related = getRelatedGames(slug);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${game.game} — ${game.title}`,
+    description: game.excerpt,
+    datePublished: game.date,
+    dateModified: game.date,
+    author: { '@type': 'Organization', name: "Psique 'n' Pixel" },
+    publisher: { '@type': 'Organization', name: "Psique 'n' Pixel" },
+    image: game.coverImage ? `${SITE}${game.coverImage}` : `${SITE}/og-image.png`,
+    mainEntityOfPage: `${SITE}/catalogo/${game.slug}`,
+    about: game.game,
+    keywords: (game.tags ?? []).join(', '),
+  };
 
   return (
     <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Header */}
       <header className="mb-10">
         <div className="flex items-center gap-3 mb-4 flex-wrap">
@@ -49,6 +78,12 @@ export default async function GameAnalysisPage({ params }) {
               {formatDate(game.date)}
             </span>
           )}
+          <span
+            className="text-brand-muted text-[8px]"
+            style={{ fontFamily: 'var(--font-pixel)' }}
+          >
+            ☄ {game.readingTime} min de lectura
+          </span>
         </div>
 
         <p
@@ -72,9 +107,12 @@ export default async function GameAnalysisPage({ params }) {
 
       <PixelDivider className="mb-10" />
 
+      {/* Table of contents */}
+      <TableOfContents headings={game.headings} accentColor="amber" />
+
       {/* Body */}
       <div
-        className="prose prose-invert max-w-none font-body text-brand-text leading-relaxed"
+        className="prose prose-invert max-w-none font-body text-brand-text leading-relaxed scroll-smooth"
         dangerouslySetInnerHTML={{ __html: game.content }}
       />
 
@@ -83,10 +121,18 @@ export default async function GameAnalysisPage({ params }) {
         {game.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             {game.tags.map((tag) => (
-              <Badge key={tag} color="muted">#{tag}</Badge>
+              <Link key={tag} href={`/catalogo/tag/${encodeURIComponent(tag.toLowerCase())}`}>
+                <Badge color="muted" className="hover:text-brand-text transition-colors">#{tag}</Badge>
+              </Link>
             ))}
           </div>
         )}
+
+        {/* Share + XP */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
+          <ShareButtons title={`${game.game} — ${game.title}`} accentColor="amber" />
+          <XpButton slug={game.slug} accentColor="amber" />
+        </div>
 
         {/* Prev / Next navigation */}
         {(prev || next) && (
@@ -120,6 +166,9 @@ export default async function GameAnalysisPage({ params }) {
           ← VOLVER AL CATÁLOGO
         </Button>
       </div>
+
+      {/* Related analyses */}
+      <RelatedContent items={related} type="game" accentColor="amber" />
     </article>
   );
 }
