@@ -1,5 +1,5 @@
 import PageWrapper from '@/components/layout/PageWrapper';
-import GameCard from '@/components/catalogo/GameCard';
+import GamesExplorer from '@/components/catalogo/GamesExplorer';
 import { getAllGames } from '@/lib/catalog';
 
 export const metadata = {
@@ -27,11 +27,7 @@ export default function CatalogoPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {games.map((game) => (
-            <GameCard key={game.slug} {...game} />
-          ))}
-        </div>
+        <GamesExplorer games={games} />
       )}
     </PageWrapper>
   );
