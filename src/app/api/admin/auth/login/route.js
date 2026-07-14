@@ -1,17 +1,12 @@
 import { NextResponse } from 'next/server';
-import { signSession, SESSION_COOKIE, SESSION_MAX_AGE } from '@/lib/adminAuth';
+import { signSession, ADMIN_PASSWORD, SESSION_COOKIE, SESSION_MAX_AGE } from '@/lib/adminAuth';
 
 export const runtime = 'nodejs';
 
 export async function POST(request) {
   const { password } = await request.json();
-  const adminPassword = process.env.ADMIN_PASSWORD;
 
-  if (!adminPassword) {
-    return NextResponse.json({ error: 'Admin no configurado. Define ADMIN_PASSWORD en .env.local' }, { status: 500 });
-  }
-
-  if (!password || password !== adminPassword) {
+  if (!password || password !== ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Contraseña incorrecta' }, { status: 401 });
   }
 
