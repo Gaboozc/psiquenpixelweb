@@ -3,6 +3,7 @@ import path from 'path';
 import Image from 'next/image';
 import FooterSocialBox from '@/components/footer/FooterSocialBox';
 import FooterPergaminos from '@/components/footer/FooterPergaminos';
+import { getSettings } from '@/lib/settings';
 
 async function getMazmorra() {
   try {
@@ -15,7 +16,7 @@ async function getMazmorra() {
 }
 
 const Footer = async () => {
-  const mazmorra = await getMazmorra();
+  const [mazmorra, settings] = await Promise.all([getMazmorra(), getSettings()]);
 
   return (
     <footer
@@ -51,13 +52,13 @@ const Footer = async () => {
           {/* Pergaminos de la Mazmorra
               — first on mobile (order-1), center on desktop (order-2) */}
           <div className="order-1 xl:order-2 w-full xl:flex-1 flex justify-center">
-            <FooterPergaminos mazmorra={mazmorra} />
+            <FooterPergaminos mazmorra={mazmorra} support={settings.support} />
           </div>
 
           {/* Social box
               — second on mobile (order-2), right on desktop (order-3) */}
           <div className="order-2 xl:order-3 shrink-0 flex justify-center xl:justify-end self-start xl:self-end">
-            <FooterSocialBox />
+            <FooterSocialBox links={settings.social} />
           </div>
 
         </div>

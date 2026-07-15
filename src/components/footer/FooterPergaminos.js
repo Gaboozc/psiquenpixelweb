@@ -63,7 +63,7 @@ function NewsletterForm() {
 // ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
-export default function FooterPergaminos({ mazmorra }) {
+export default function FooterPergaminos({ mazmorra, support = {} }) {
   return (
     <div
       className="w-full max-w-xl pixel-border overflow-hidden"
@@ -138,7 +138,7 @@ export default function FooterPergaminos({ mazmorra }) {
           </p>
           <div className="flex flex-col gap-2 mt-auto">
             <a
-              href="https://ko-fi.com/psiquenpixel"
+              href={support.kofi ?? '#'}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-3 hover:border-brand-amber hover:text-brand-amber transition-colors"
@@ -147,7 +147,7 @@ export default function FooterPergaminos({ mazmorra }) {
               ☕ KO-FI
             </a>
             <a
-              href="https://patreon.com/psiquenpixel"
+              href={support.patreon ?? '#'}
               target="_blank"
               rel="noopener noreferrer"
               className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-3 py-3 hover:border-brand-purple hover:text-brand-purple transition-colors"
