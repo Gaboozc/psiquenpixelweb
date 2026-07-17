@@ -9,6 +9,9 @@ export const metadata = {
   description: "Únete a la comunidad de Psique 'n' Pixel en Discord y sigue el directo en Twitch.",
 };
 
+// Render per-request so admin edits apply live (Twitch status is already live).
+export const dynamic = 'force-dynamic';
+
 export default async function ComunidadPage() {
   const [comunidad, settings] = await Promise.all([getComunidad(), getSettings()]);
   const { twitch: twitchCopy, discord } = comunidad;

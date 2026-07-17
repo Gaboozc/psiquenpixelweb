@@ -7,6 +7,9 @@ export const metadata = {
   description: "Vídeos de YouTube y episodios de podcast de Psique 'n' Pixel.",
 };
 
+// Render per-request so admin edits apply live.
+export const dynamic = 'force-dynamic';
+
 function ComingSoonSlot({ icon, color }) {
   return (
     <div

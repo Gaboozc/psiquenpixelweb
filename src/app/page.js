@@ -9,6 +9,9 @@ import { getAllGames } from '@/lib/catalog';
 import { getHome } from '@/lib/home';
 import { getSettings } from '@/lib/settings';
 
+// Render per-request so admin edits (hero, banners, links) apply live.
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const posts = getAllPosts({ limit: 3 });
   const games = getAllGames({ limit: 3 });

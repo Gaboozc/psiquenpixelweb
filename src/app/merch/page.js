@@ -7,8 +7,8 @@ export const metadata = {
   description: 'Equipamiento oficial del Héroe de las Mazmorras.',
 };
 
-// Re-evaluate scheduled discount windows periodically.
-export const revalidate = 3600;
+// Render per-request so admin edits and scheduled discount windows apply live.
+export const dynamic = 'force-dynamic';
 
 export default async function MerchPage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
