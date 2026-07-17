@@ -6,15 +6,19 @@ import GameCard from '@/components/catalogo/GameCard';
 import HeroSection from '@/components/home/HeroSection';
 import { getAllPosts } from '@/lib/posts';
 import { getAllGames } from '@/lib/catalog';
+import { getHome } from '@/lib/home';
+import { getSettings } from '@/lib/settings';
 
-export default function Home() {
+export default async function Home() {
   const posts = getAllPosts({ limit: 3 });
   const games = getAllGames({ limit: 3 });
+  const [home, settings] = await Promise.all([getHome(), getSettings()]);
+  const { hero, mediaBanner, communityBanner } = home;
 
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <HeroSection />
+      <HeroSection phrases={hero.phrases} ctas={hero.ctas} videoUrl={hero.videoUrl} />
 
       <PixelDivider />
 
@@ -97,21 +101,20 @@ export default function Home() {
               className="text-brand-purple text-[9px] tracking-widest"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              ▶ CONTENIDO MULTIMEDIA
+              {mediaBanner.eyebrow}
             </p>
             <h2
               className="text-brand-text text-lg md:text-xl"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              También en vídeo y audio
+              {mediaBanner.title}
             </h2>
             <p className="text-brand-muted text-sm max-w-md font-body leading-relaxed">
-              Análisis en profundidad en YouTube y episodios del podcast en Spotify.
-              Síguenos para no perderte nada.
+              {mediaBanner.text}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <PillButton href="/media">▶ IR A MEDIA</PillButton>
-              <PillButton href="#">♫ SPOTIFY</PillButton>
+              <PillButton href={mediaBanner.primaryHref}>{mediaBanner.primaryLabel}</PillButton>
+              <PillButton href={settings.social.spotify}>{mediaBanner.secondaryLabel}</PillButton>
             </div>
           </div>
         </div>
@@ -130,21 +133,20 @@ export default function Home() {
               className="text-brand-amber text-[9px] tracking-widest"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              ⚔ ÚNETE A LA GUILD
+              {communityBanner.eyebrow}
             </p>
             <h2
               className="text-brand-text text-lg md:text-xl"
               style={{ fontFamily: 'var(--font-pixel)' }}
             >
-              La Comunidad
+              {communityBanner.title}
             </h2>
             <p className="text-brand-muted text-sm max-w-md font-body leading-relaxed">
-              Debates, recomendaciones y análisis colaborativos en nuestro servidor de Discord.
-              Más de la mente, más del pixel.
+              {communityBanner.text}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <PillButton href="/comunidad">JOIN THE GUILD ⚔</PillButton>
-              <PillButton href="#">VER EN TWITCH</PillButton>
+              <PillButton href={communityBanner.primaryHref}>{communityBanner.primaryLabel}</PillButton>
+              <PillButton href={settings.social.twitch}>{communityBanner.secondaryLabel}</PillButton>
             </div>
           </div>
         </div>

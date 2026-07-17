@@ -4,11 +4,16 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 
-const PHRASES = [
+const DEFAULT_PHRASES = [
   'Exploramos la psicología detrás de los mundos digitales.',
   'Narrativa, trauma y redención en los videojuegos.',
   'Donde la mazmorra más profunda es la mente humana.',
   'Análisis cultural de los juegos que nos forman.',
+];
+
+const DEFAULT_CTAS = [
+  { label: 'LEER POSTS', href: '/blog' },
+  { label: 'VER CATÁLOGO', href: '/catalogo' },
 ];
 
 const useTypewriter = (phrases, speed = 55, pause = 2200) => {
@@ -44,8 +49,11 @@ const useTypewriter = (phrases, speed = 55, pause = 2200) => {
   return displayed;
 };
 
-export default function HeroSection() {
-  const text = useTypewriter(PHRASES);
+export default function HeroSection({ phrases, ctas, videoUrl } = {}) {
+  const activePhrases = phrases?.length ? phrases : DEFAULT_PHRASES;
+  const activeCtas = ctas?.length ? ctas : DEFAULT_CTAS;
+  const activeVideo = videoUrl || '/video/hero-bg.mp4';
+  const text = useTypewriter(activePhrases);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -61,7 +69,7 @@ export default function HeroSection() {
       {/* Video background */}
       {!reducedMotion && (
         <video
-          src="/video/hero-bg.mp4"
+          src={activeVideo}
           autoPlay
           loop
           muted
@@ -94,8 +102,11 @@ export default function HeroSection() {
         </p>
 
         <div className="px-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full max-w-xs sm:max-w-none">
-          <Button variant="primary" href="/blog">LEER POSTS</Button>
-          <Button variant="secondary" href="/catalogo">VER CATÁLOGO</Button>
+          {activeCtas.map((cta, i) => (
+            <Button key={cta.href + i} variant={i === 0 ? 'primary' : 'secondary'} href={cta.href}>
+              {cta.label}
+            </Button>
+          ))}
         </div>
       </div>
     </section>
