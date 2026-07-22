@@ -24,11 +24,16 @@ export async function generateMetadata({ params }) {
   return {
     title: `${game.game} — ${game.title}`,
     description: game.excerpt,
+    alternates: { canonical: `/catalogo/${game.slug}` },
+    keywords: game.tags,
     openGraph: {
       title: `${game.game} — ${game.title}`,
       description: game.excerpt,
       type: 'article',
-      images: game.coverImage ? [{ url: game.coverImage }] : [{ url: '/og-image.png' }],
+      url: `/catalogo/${game.slug}`,
+      publishedTime: game.date,
+      tags: game.tags,
+      // OG image provided by the generated catalogo/[slug]/opengraph-image.js
     },
   };
 }
@@ -51,7 +56,7 @@ export default async function GameAnalysisPage({ params }) {
     dateModified: game.date,
     author: { '@type': 'Organization', name: "Psique 'n' Pixel" },
     publisher: { '@type': 'Organization', name: "Psique 'n' Pixel" },
-    image: game.coverImage ? `${SITE}${game.coverImage}` : `${SITE}/og-image.png`,
+    image: game.coverImage ? `${SITE}${game.coverImage}` : `${SITE}/catalogo/${game.slug}/opengraph-image`,
     mainEntityOfPage: `${SITE}/catalogo/${game.slug}`,
     about: game.game,
     keywords: (game.tags ?? []).join(', '),

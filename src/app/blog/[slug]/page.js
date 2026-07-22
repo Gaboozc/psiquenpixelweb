@@ -24,11 +24,16 @@ export async function generateMetadata({ params }) {
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: { canonical: `/blog/${post.slug}` },
+    keywords: post.tags,
     openGraph: {
       title: post.title,
       description: post.excerpt,
       type: 'article',
-      images: post.coverImage ? [{ url: post.coverImage }] : [{ url: '/og-image.png' }],
+      url: `/blog/${post.slug}`,
+      publishedTime: post.date,
+      tags: post.tags,
+      // OG image provided by the generated blog/[slug]/opengraph-image.js
     },
   };
 }
@@ -51,7 +56,7 @@ export default async function ArticlePage({ params }) {
     dateModified: post.date,
     author: { '@type': 'Organization', name: "Psique 'n' Pixel" },
     publisher: { '@type': 'Organization', name: "Psique 'n' Pixel" },
-    image: post.coverImage ? `${SITE}${post.coverImage}` : `${SITE}/og-image.png`,
+    image: post.coverImage ? `${SITE}${post.coverImage}` : `${SITE}/blog/${post.slug}/opengraph-image`,
     mainEntityOfPage: `${SITE}/blog/${post.slug}`,
     keywords: (post.tags ?? []).join(', '),
   };
