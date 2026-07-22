@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { revalidateCatalogo } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
@@ -39,6 +40,7 @@ export async function PUT(request, { params }) {
 
     const fileContent = matter.stringify(content || '', frontmatter);
     await fs.writeFile(filePath, fileContent, 'utf8');
+    revalidateCatalogo(slug);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Error actualizando análisis' }, { status: 500 });
@@ -50,6 +52,7 @@ export async function DELETE(request, { params }) {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);
   try {
     await fs.unlink(filePath);
+    revalidateCatalogo(slug);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Análisis no encontrado' }, { status: 404 });

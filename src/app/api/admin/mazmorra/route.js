@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { revalidateSiteChrome } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
@@ -26,6 +27,7 @@ export async function PUT(request) {
 
     const data = { slug, game: game || slug, title: title || '', excerpt: excerpt || '', coverImage: coverImage || '' };
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    revalidateSiteChrome();
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Error actualizando mazmorra' }, { status: 500 });

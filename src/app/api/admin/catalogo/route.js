@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { revalidateCatalogo } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
@@ -55,6 +56,7 @@ export async function POST(request) {
     const fileContent = matter.stringify(content || '', frontmatter);
     await fs.writeFile(filePath, fileContent, 'utf8');
 
+    revalidateCatalogo(sanitizedSlug);
     return NextResponse.json({ ok: true, slug: sanitizedSlug }, { status: 201 });
   } catch {
     return NextResponse.json({ error: 'Error creando análisis' }, { status: 500 });

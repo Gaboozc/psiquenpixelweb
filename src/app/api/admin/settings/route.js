@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { getSettings, DEFAULT_SETTINGS } from '@/lib/settings';
+import { revalidateSiteChrome } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
@@ -20,6 +21,7 @@ export async function PUT(request) {
       support: { ...DEFAULT_SETTINGS.support, ...(body.support ?? {}) },
     };
     await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    revalidateSiteChrome();
     return NextResponse.json({ ok: true, settings: data });
   } catch {
     return NextResponse.json({ error: 'Error guardando ajustes' }, { status: 500 });
