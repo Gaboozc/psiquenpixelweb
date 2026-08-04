@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry';
 import { CartProvider } from '@/context/CartContext';
+import { Analytics } from '@vercel/analytics/next';
 
 const pressStart2P = Press_Start_2P({
   weight: '400',
@@ -64,6 +65,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </CartProvider>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   );
