@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Field } from '@/components/admin/ContentEditor';
 
-function SectionForm({ title, accentClass, value, onChange }) {
+function SectionForm({ title, accentClass, value, onChange, showChannelId = false }) {
   const setKey = (key) => (e) => onChange({ ...value, [key]: e.target.value });
   const toggleComing = (e) => onChange({ ...value, comingSoon: e.target.checked });
 
@@ -42,8 +42,14 @@ function SectionForm({ title, accentClass, value, onChange }) {
         </div>
       </div>
 
+      {showChannelId && (
+        <Field label="ID DE CANAL DE YOUTUBE (UC… — muestra los últimos vídeos automáticamente)">
+          <input value={value.channelId ?? ''} onChange={setKey('channelId')} className="admin-input" placeholder="UCxxxxxxxxxxxxxxxxxxxxxx" />
+        </Field>
+      )}
+
       <Field label="URL DE EMBED (iframe — deja vacío para placeholder)">
-        <input value={value.embedUrl} onChange={setKey('embedUrl')} className="admin-input" placeholder="https://www.youtube.com/embed/VIDEO_ID" />
+        <input value={value.embedUrl} onChange={setKey('embedUrl')} className="admin-input" placeholder="https://www.youtube.com/embed/VIDEO_ID o https://open.spotify.com/embed/show/ID" />
       </Field>
 
       <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -91,7 +97,7 @@ export default function MediaEditor({ initial }) {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
-      <SectionForm title="▶ YOUTUBE" accentClass="text-brand-purple" value={youtube} onChange={(v) => { setYoutube(v); setSaved(false); }} />
+      <SectionForm title="▶ YOUTUBE" accentClass="text-brand-purple" value={youtube} onChange={(v) => { setYoutube(v); setSaved(false); }} showChannelId />
       <SectionForm title="♫ SPOTIFY" accentClass="text-brand-amber" value={spotify} onChange={(v) => { setSpotify(v); setSaved(false); }} />
 
       {error && <p className="text-red-400 text-xs font-body">{error}</p>}

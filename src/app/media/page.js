@@ -1,6 +1,7 @@
 import PageWrapper from '@/components/layout/PageWrapper';
 import { getMedia } from '@/lib/media';
 import { getSettings } from '@/lib/settings';
+import { getLatestVideos } from '@/lib/youtube';
 
 export const metadata = {
   title: 'Media',
@@ -66,8 +67,36 @@ function MediaFeatures({ items, accentClass }) {
   );
 }
 
+function LatestVideos({ videos }) {
+  return (
+    <div className="mt-8">
+      <p className="text-brand-muted text-[8px] tracking-widest mb-4" style={{ fontFamily: 'var(--font-pixel)' }}>
+        ÚLTIMOS VÍDEOS
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {videos.map((v) => (
+          <a
+            key={v.id}
+            href={v.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group pixel-border overflow-hidden"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={v.thumbnail} alt={v.title} className="w-full aspect-video object-cover opacity-90 group-hover:opacity-100 transition-opacity" loading="lazy" />
+            <p className="text-brand-text text-xs font-body p-3 leading-snug line-clamp-2 group-hover:text-brand-purple transition-colors">
+              {v.title}
+            </p>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default async function MediaPage() {
   const [media, settings] = await Promise.all([getMedia(), getSettings()]);
+  const youtubeVideos = await getLatestVideos(media.youtube.channelId, 6);
 
   return (
     <PageWrapper
@@ -105,8 +134,24 @@ export default async function MediaPage() {
               </a>
             </div>
 
-            <EmbedOrPlaceholder section={media.youtube} icon="▶" color="#9b59f7" />
+            {!media.youtube.comingSoon && media.youtube.embedUrl ? (
+              <EmbedOrPlaceholder section={media.youtube} icon="▶" color="#9b59f7" />
+            ) : youtubeVideos.length > 0 ? (
+              <div className="w-full aspect-video pixel-border overflow-hidden">
+                <iframe
+                  src={`https://www.youtube.com/embed/${youtubeVideos[0].id}`}
+                  allowFullScreen
+                  loading="lazy"
+                  className="w-full h-full"
+                  title={youtubeVideos[0].title}
+                />
+              </div>
+            ) : (
+              <EmbedOrPlaceholder section={media.youtube} icon="▶" color="#9b59f7" />
+            )}
           </div>
+
+          {youtubeVideos.length > 1 && <LatestVideos videos={youtubeVideos.slice(1)} />}
         </section>
 
         <div className="border-t border-brand-border" />

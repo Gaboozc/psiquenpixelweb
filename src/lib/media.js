@@ -14,6 +14,7 @@ export const DEFAULT_MEDIA = {
     ],
     comingSoon: true,
     embedUrl: '',
+    channelId: '',
   },
   spotify: {
     description:
@@ -33,6 +34,8 @@ function mergeSection(def, incoming = {}) {
     features: Array.isArray(incoming.features) ? incoming.features : def.features,
     comingSoon: typeof incoming.comingSoon === 'boolean' ? incoming.comingSoon : def.comingSoon,
     embedUrl: incoming.embedUrl ?? def.embedUrl ?? '',
+    // channelId only applies to the youtube section (ignored elsewhere).
+    channelId: incoming.channelId ?? def.channelId ?? '',
   };
 }
 
