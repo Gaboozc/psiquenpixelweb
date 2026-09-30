@@ -1,9 +1,8 @@
 import { getAllPosts } from '@/lib/posts';
 import { getAllGames } from '@/lib/catalog';
 
-export default function sitemap() {
-  const posts = getAllPosts();
-  const games = getAllGames();
+export default async function sitemap() {
+  const [posts, games] = await Promise.all([getAllPosts(), getAllGames()]);
 
   const base = 'https://psiquenpixel.com';
 

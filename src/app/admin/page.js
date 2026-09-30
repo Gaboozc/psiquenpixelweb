@@ -1,37 +1,31 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import Link from 'next/link';
 import { ap } from '@/lib/adminPath';
+import { getSupabase } from '@/lib/supabase';
+import { readContent } from '@/lib/siteContent';
+import { readStore } from '@/lib/merch';
+
+// Row count for a table (0 if Supabase is unavailable).
+async function countRows(table) {
+  try {
+    const { count, error } = await getSupabase().from(table).select('*', { count: 'exact', head: true });
+    if (error) throw error;
+    return count ?? 0;
+  } catch (e) {
+    console.error(`[supabase] count ${table}:`, e?.message ?? e);
+    return 0;
+  }
+}
 
 async function getStats() {
-  const blogDir    = path.join(process.cwd(), 'src', 'content', 'blog');
-  const catDir     = path.join(process.cwd(), 'src', 'content', 'catalogo');
-  const mazFile    = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
-  const nlFile     = path.join(process.cwd(), 'src', 'data', 'newsletter.json');
-  const prodFile   = path.join(process.cwd(), 'src', 'data', 'products.json');
-
-  const [blogFiles, catFiles, mazRaw, nlRaw, prodRaw] = await Promise.all([
-    fs.readdir(blogDir).catch(() => []),
-    fs.readdir(catDir).catch(() => []),
-    fs.readFile(mazFile, 'utf8').catch(() => 'null'),
-    fs.readFile(nlFile,  'utf8').catch(() => '[]'),
-    fs.readFile(prodFile, 'utf8').catch(() => '{}'),
+  const [posts, games, subscribers, store, mazmorra] = await Promise.all([
+    countRows('posts'),
+    countRows('games'),
+    countRows('subscribers'),
+    readStore(),
+    readContent('mazmorra'),
   ]);
 
-  let subscribers = 0;
-  try { subscribers = JSON.parse(nlRaw).length; } catch { /* empty */ }
-
-  let products = 0;
-  try { products = (JSON.parse(prodRaw).products ?? []).length; } catch { /* empty */ }
-
-  return {
-    posts: blogFiles.filter((f) => f.endsWith('.md')).length,
-    games: catFiles.filter((f) => f.endsWith('.md')).length,
-    subscribers,
-    products,
-    mazmorra: JSON.parse(mazRaw),
-  };
+  return { posts, games, subscribers, products: store.products.length, mazmorra };
 }
 
 const StatCard = ({ label, value, href, color }) => (

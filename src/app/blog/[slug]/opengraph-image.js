@@ -5,13 +5,13 @@ export const alt = 'Post — Psique \'n\' Pixel';
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
-export function generateStaticParams() {
-  return getAllPosts().map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  return (await getAllPosts()).map((post) => ({ slug: post.slug }));
 }
 
 export default async function Image({ params }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   return renderOgCard({
     eyebrow: `POST${post?.category ? ' · ' + post.category.toUpperCase() : ''}`,
     title: post?.title ?? "Psique 'n' Pixel",

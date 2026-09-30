@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import RichTextEditor from './RichTextEditor';
+import { uploadFile } from '@/lib/uploadClient';
 
 // ---------------------------------------------------------------------------
 // Image uploader
@@ -10,37 +11,44 @@ import RichTextEditor from './RichTextEditor';
 export function ImageUpload({ value, onChange }) {
   const inputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (!file) return;
     setUploading(true);
-    const form = new FormData();
-    form.append('file', file);
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: form });
-    const data = await res.json();
-    if (data.url) onChange(data.url);
+    setError('');
+    try {
+      const { url } = await uploadFile(file);
+      onChange(url);
+    } catch (err) {
+      setError(err.message);
+    }
     setUploading(false);
   };
 
   return (
-    <div className="flex items-center gap-3">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="/uploads/imagen.jpg o URL externa"
-        className="admin-input flex-1"
-      />
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        disabled={uploading}
-        className="shrink-0 border border-brand-border text-brand-muted text-xs px-3 py-2 hover:border-brand-purple hover:text-brand-purple transition-colors font-body disabled:opacity-50"
-      >
-        {uploading ? '...' : 'Subir'}
-      </button>
-      <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
+    <div>
+      <div className="flex items-center gap-3">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="https://… (sube una imagen o pega una URL)"
+          className="admin-input flex-1"
+        />
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          disabled={uploading}
+          className="shrink-0 border border-brand-border text-brand-muted text-xs px-3 py-2 hover:border-brand-purple hover:text-brand-purple transition-colors font-body disabled:opacity-50"
+        >
+          {uploading ? '...' : 'Subir'}
+        </button>
+        <input ref={inputRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
+      </div>
+      {error && <p className="text-red-400 text-xs font-body mt-1.5">{error}</p>}
     </div>
   );
 }

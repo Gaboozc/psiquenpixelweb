@@ -1,7 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'media.json');
+import { readContent, writeContent } from './siteContent';
 
 export const DEFAULT_MEDIA = {
   youtube: {
@@ -38,14 +35,10 @@ export function normalizeMedia(body = {}) {
 }
 
 export async function getMedia() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    return normalizeMedia(JSON.parse(raw));
-  } catch {
-    return DEFAULT_MEDIA;
-  }
+  const parsed = await readContent('media');
+  return parsed ? normalizeMedia(parsed) : DEFAULT_MEDIA;
 }
 
 export async function writeMedia(data) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  await writeContent('media', data);
 }

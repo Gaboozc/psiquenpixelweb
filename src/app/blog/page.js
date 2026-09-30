@@ -7,8 +7,12 @@ export const metadata = {
   description: 'Artículos de análisis psicológico, narrativo y cultural de videojuegos.',
 };
 
-export default function PostsPage() {
-  const posts = getAllPosts();
+// Regenerate at most once a minute so edits made outside the admin show up too
+// (admin saves also revalidate on demand).
+export const revalidate = 60;
+
+export default async function PostsPage() {
+  const posts = await getAllPosts();
 
   return (
     <PageWrapper

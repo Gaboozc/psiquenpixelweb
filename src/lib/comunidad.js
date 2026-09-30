@@ -1,7 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'comunidad.json');
+import { readContent, writeContent } from './siteContent';
 
 export const DEFAULT_COMUNIDAD = {
   twitch: {
@@ -32,14 +29,10 @@ export function normalizeComunidad(body = {}) {
 }
 
 export async function getComunidad() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    return normalizeComunidad(JSON.parse(raw));
-  } catch {
-    return DEFAULT_COMUNIDAD;
-  }
+  const parsed = await readContent('comunidad');
+  return parsed ? normalizeComunidad(parsed) : DEFAULT_COMUNIDAD;
 }
 
 export async function writeComunidad(data) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  await writeContent('comunidad', data);
 }

@@ -1,28 +1,24 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'products.json');
+import { readContent, writeContent } from './siteContent';
 
 export const DEFAULT_CATEGORIES = [
-  { id: 'todos', label: 'TODO EL BOTÍN' },
+  { id: 'todos',          label: 'TODO EL BOTÍN' },
+  { id: 'camisetas',      label: 'CAMISETAS' },
+  { id: 'hoodies',        label: 'HOODIES' },
+  { id: 'accesorios',     label: 'ACCESORIOS' },
+  { id: 'coleccionables', label: 'COLECCIONABLES' },
 ];
 
-// Read the raw store file ({ categories, products }) with a safe fallback.
+// Read the raw store ({ categories, products }) with a safe fallback.
 export async function readStore() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    const parsed = JSON.parse(raw);
-    return {
-      categories: Array.isArray(parsed.categories) ? parsed.categories : DEFAULT_CATEGORIES,
-      products: Array.isArray(parsed.products) ? parsed.products : [],
-    };
-  } catch {
-    return { categories: DEFAULT_CATEGORIES, products: [] };
-  }
+  const parsed = await readContent('merch');
+  return {
+    categories: Array.isArray(parsed?.categories) ? parsed.categories : DEFAULT_CATEGORIES,
+    products: Array.isArray(parsed?.products) ? parsed.products : [],
+  };
 }
 
 export async function writeStore(store) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(store, null, 2), 'utf8');
+  await writeContent('merch', store);
 }
 
 // Is a discount currently active? Compares YYYY-MM-DD strings lexicographically

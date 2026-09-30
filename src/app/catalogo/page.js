@@ -7,8 +7,12 @@ export const metadata = {
   description: 'Análisis de videojuegos desde una perspectiva psicológica, narrativa y cultural.',
 };
 
-export default function CatalogoPage() {
-  const games = getAllGames();
+// Regenerate at most once a minute so edits made outside the admin show up too
+// (admin saves also revalidate on demand).
+export const revalidate = 60;
+
+export default async function CatalogoPage() {
+  const games = await getAllGames();
 
   return (
     <PageWrapper

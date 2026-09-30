@@ -12,14 +12,18 @@ import { formatDate } from '@/lib/format';
 
 const SITE = 'https://psiquenpixel.com';
 
+// Regenerate at most once a minute so edits made outside the admin show up too
+// (admin saves also revalidate on demand).
+export const revalidate = 60;
+
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   if (!post) return { title: 'Post no encontrado' };
   return {
     title: post.title,
@@ -40,12 +44,14 @@ export async function generateMetadata({ params }) {
 
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
 
   if (!post) notFound();
 
-  const { prev, next } = getAdjacentPosts(slug);
-  const related = getRelatedPosts(slug);
+  const [{ prev, next }, related] = await Promise.all([
+    getAdjacentPosts(slug),
+    getRelatedPosts(slug),
+  ]);
 
   const jsonLd = {
     '@context': 'https://schema.org',

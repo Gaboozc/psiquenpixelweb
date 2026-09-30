@@ -1,19 +1,11 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import Image from 'next/image';
 import FooterSocialBox from '@/components/footer/FooterSocialBox';
 import FooterPergaminos from '@/components/footer/FooterPergaminos';
 import { getSettings } from '@/lib/settings';
+import { readContent } from '@/lib/siteContent';
 
-async function getMazmorra() {
-  try {
-    const filePath = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
-    const raw = await fs.readFile(filePath, 'utf8');
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
+// Mazmorra de la semana: the game analysis pinned from /admin/mazmorra (or null).
+const getMazmorra = () => readContent('mazmorra');
 
 const Footer = async () => {
   const [mazmorra, settings] = await Promise.all([getMazmorra(), getSettings()]);

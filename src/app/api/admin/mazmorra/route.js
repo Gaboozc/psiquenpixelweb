@@ -1,35 +1,26 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { readContent, writeContent } from '@/lib/siteContent';
 import { revalidateSiteChrome } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
-
 export async function GET() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    return NextResponse.json(JSON.parse(raw));
-  } catch {
-    return NextResponse.json(null);
-  }
+  return NextResponse.json(await readContent('mazmorra'));
 }
 
 export async function PUT(request) {
   try {
-    const body = await request.json();
-    const { slug, game, title, excerpt, coverImage } = body;
+    const { slug, game, title, excerpt, coverImage } = await request.json();
 
     if (!slug) {
       return NextResponse.json({ error: 'slug es obligatorio' }, { status: 400 });
     }
 
     const data = { slug, game: game || slug, title: title || '', excerpt: excerpt || '', coverImage: coverImage || '' };
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    await writeContent('mazmorra', data);
     revalidateSiteChrome();
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: 'Error actualizando mazmorra' }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e.message || 'Error actualizando mazmorra' }, { status: 500 });
   }
 }

@@ -1,18 +1,11 @@
-import { promises as fs } from 'fs';
-import path from 'path';
 import SubscribersTable from '@/components/admin/SubscribersTable';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'newsletter.json');
+import { listSubscribers } from '@/lib/subscribers';
 
 async function getSubscribers() {
   try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    const data = JSON.parse(raw);
-    return data.map((entry) =>
-      typeof entry === 'string' ? { email: entry, subscribedAt: '' } : entry
-    );
-  } catch {
-    return [];
+    return { subscribers: await listSubscribers(), error: null };
+  } catch (e) {
+    return { subscribers: [], error: e.message };
   }
 }
 
@@ -20,7 +13,7 @@ async function getSubscribers() {
 export const dynamic = 'force-dynamic';
 
 export default async function AdminNewsletterPage() {
-  const subscribers = await getSubscribers();
+  const { subscribers, error } = await getSubscribers();
 
   return (
     <div>
@@ -31,6 +24,7 @@ export default async function AdminNewsletterPage() {
             ? 'Sin suscriptores aún.'
             : `${subscribers.length} suscriptor${subscribers.length !== 1 ? 'es' : ''}`}
         </p>
+        {error && <p className="text-red-400 text-sm font-body mt-2">No se pudieron cargar: {error}</p>}
       </div>
 
       <SubscribersTable initialSubscribers={subscribers} />
