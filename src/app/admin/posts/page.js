@@ -1,34 +1,31 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import Link from 'next/link';
 import PostsTable from '@/components/admin/PostsTable';
 import { ap } from '@/lib/adminPath';
+import { adminList } from '@/lib/adminArticles';
 
 async function getPosts() {
-  const dir = path.join(process.cwd(), 'src', 'content', 'blog');
-  const files = (await fs.readdir(dir).catch(() => [])).filter((f) => f.endsWith('.md'));
-  const posts = await Promise.all(
-    files.map(async (filename) => {
-      const raw = await fs.readFile(path.join(dir, filename), 'utf8');
-      const { data } = matter(raw);
-      return {
-        slug:      data.slug      ?? filename.replace('.md', ''),
-        title:     data.title     ?? '—',
-        date:      data.date      ?? '',
-        category:  data.category  ?? '—',
-        published: data.published ?? true,
-      };
-    }),
-  );
-  return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+  try {
+    const rows = await adminList('posts');
+    return {
+      error: null,
+      posts: rows.map((r) => ({
+        slug: r.slug,
+        title: r.title || '—',
+        date: r.date || '',
+        category: r.category || '—',
+        published: r.published,
+      })),
+    };
+  } catch (e) {
+    return { error: e.message, posts: [] };
+  }
 }
 
 // Always reflect current data in the admin.
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPostsPage() {
-  const posts = await getPosts();
+  const { posts, error } = await getPosts();
 
   return (
     <div>
@@ -46,6 +43,7 @@ export default async function AdminPostsPage() {
         </Link>
       </div>
 
+      {error && <p className="text-red-400 text-sm font-body mb-4">No se pudieron cargar los posts: {error}</p>}
       <PostsTable posts={posts} />
     </div>
   );

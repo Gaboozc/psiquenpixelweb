@@ -7,6 +7,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import { marked } from 'marked';
+import { uploadFile } from '@/lib/uploadClient';
 
 // --- helpers ---------------------------------------------------------------
 const marginFor = (align) =>
@@ -140,19 +141,14 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
     setUploading(true);
     setError('');
     try {
-      const form = new FormData();
-      form.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: form });
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        setError(data.error || 'Error al subir');
-      } else if (data.kind === 'video') {
-        editor.chain().focus().setVideo({ src: data.url, width: '100%', align: 'center' }).run();
+      const { url, kind } = await uploadFile(file);
+      if (kind === 'video') {
+        editor.chain().focus().setVideo({ src: url, width: '100%', align: 'center' }).run();
       } else {
-        editor.chain().focus().setImage({ src: data.url, width: '100%', align: 'center' }).run();
+        editor.chain().focus().setImage({ src: url, width: '100%', align: 'center' }).run();
       }
-    } catch {
-      setError('Error de red al subir');
+    } catch (err) {
+      setError(err.message);
     }
     setUploading(false);
   };

@@ -1,7 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'settings.json');
+import { readContent, writeContent } from './siteContent';
 
 // Default links — used as a fallback when settings.json is missing, and as the
 // seed shape so every consumer can rely on these keys existing.
@@ -21,14 +18,14 @@ export const DEFAULT_SETTINGS = {
 // Read site settings from disk, merged over the defaults so missing keys never
 // break a consumer. Safe to call from Server Components and route handlers.
 export async function getSettings() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    const parsed = JSON.parse(raw);
-    return {
-      social: { ...DEFAULT_SETTINGS.social, ...(parsed.social ?? {}) },
-      support: { ...DEFAULT_SETTINGS.support, ...(parsed.support ?? {}) },
-    };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
+  const parsed = await readContent('settings');
+  if (!parsed) return DEFAULT_SETTINGS;
+  return {
+    social: { ...DEFAULT_SETTINGS.social, ...(parsed.social ?? {}) },
+    support: { ...DEFAULT_SETTINGS.support, ...(parsed.support ?? {}) },
+  };
+}
+
+export async function writeSettings(data) {
+  await writeContent('settings', data);
 }

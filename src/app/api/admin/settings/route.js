@@ -1,12 +1,8 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import { getSettings, DEFAULT_SETTINGS } from '@/lib/settings';
+import { getSettings, writeSettings, DEFAULT_SETTINGS } from '@/lib/settings';
 import { revalidateSiteChrome } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'settings.json');
 
 export async function GET() {
   const settings = await getSettings();
@@ -20,10 +16,10 @@ export async function PUT(request) {
       social: { ...DEFAULT_SETTINGS.social, ...(body.social ?? {}) },
       support: { ...DEFAULT_SETTINGS.support, ...(body.support ?? {}) },
     };
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+    await writeSettings(data);
     revalidateSiteChrome();
     return NextResponse.json({ ok: true, settings: data });
-  } catch {
-    return NextResponse.json({ error: 'Error guardando ajustes' }, { status: 500 });
+  } catch (e) {
+    return NextResponse.json({ error: e.message || 'Error guardando ajustes' }, { status: 500 });
   }
 }

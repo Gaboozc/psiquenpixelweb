@@ -1,35 +1,32 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import Link from 'next/link';
 import GamesTable from '@/components/admin/GamesTable';
 import { ap } from '@/lib/adminPath';
+import { adminList } from '@/lib/adminArticles';
 
 async function getGames() {
-  const dir = path.join(process.cwd(), 'src', 'content', 'catalogo');
-  const files = (await fs.readdir(dir).catch(() => [])).filter((f) => f.endsWith('.md'));
-  const games = await Promise.all(
-    files.map(async (filename) => {
-      const raw = await fs.readFile(path.join(dir, filename), 'utf8');
-      const { data } = matter(raw);
-      return {
-        slug:      data.slug      ?? filename.replace('.md', ''),
-        game:      data.game      ?? '—',
-        title:     data.title     ?? '—',
-        date:      data.date      ?? '',
-        genre:     (data.genre ?? []).join(', '),
-        published: data.published ?? true,
-      };
-    }),
-  );
-  return games.sort((a, b) => new Date(b.date) - new Date(a.date));
+  try {
+    const rows = await adminList('games');
+    return {
+      error: null,
+      games: rows.map((r) => ({
+        slug: r.slug,
+        game: r.game || '—',
+        title: r.title || '—',
+        date: r.date || '',
+        genre: (r.genre ?? []).join(', '),
+        published: r.published,
+      })),
+    };
+  } catch (e) {
+    return { error: e.message, games: [] };
+  }
 }
 
 // Always reflect current data in the admin.
 export const dynamic = 'force-dynamic';
 
 export default async function AdminCatalogoPage() {
-  const games = await getGames();
+  const { games, error } = await getGames();
 
   return (
     <div>
@@ -46,6 +43,7 @@ export default async function AdminCatalogoPage() {
         </Link>
       </div>
 
+      {error && <p className="text-red-400 text-sm font-body mb-4">No se pudieron cargar los análisis: {error}</p>}
       <GamesTable games={games} />
     </div>
   );

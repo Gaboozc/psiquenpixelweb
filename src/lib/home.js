@@ -1,7 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'home.json');
+import { readContent, writeContent } from './siteContent';
 
 export const DEFAULT_HOME = {
   hero: {
@@ -64,14 +61,10 @@ export function normalizeHome(body = {}) {
 }
 
 export async function getHome() {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8');
-    return normalizeHome(JSON.parse(raw));
-  } catch {
-    return DEFAULT_HOME;
-  }
+  const parsed = await readContent('home');
+  return parsed ? normalizeHome(parsed) : DEFAULT_HOME;
 }
 
 export async function writeHome(data) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
+  await writeContent('home', data);
 }

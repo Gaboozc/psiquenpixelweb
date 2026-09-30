@@ -12,14 +12,18 @@ import { formatDate } from '@/lib/format';
 
 const SITE = 'https://psiquenpixel.com';
 
+// Regenerate at most once a minute so edits made outside the admin show up too
+// (admin saves also revalidate on demand).
+export const revalidate = 60;
+
 export async function generateStaticParams() {
-  const games = getAllGames();
+  const games = await getAllGames();
   return games.map((game) => ({ slug: game.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const game = getGameBySlug(slug);
+  const game = await getGameBySlug(slug);
   if (!game) return { title: 'Análisis no encontrado' };
   return {
     title: `${game.game} — ${game.title}`,
@@ -40,12 +44,14 @@ export async function generateMetadata({ params }) {
 
 export default async function GameAnalysisPage({ params }) {
   const { slug } = await params;
-  const game = getGameBySlug(slug);
+  const game = await getGameBySlug(slug);
 
   if (!game) notFound();
 
-  const { prev, next } = getAdjacentGames(slug);
-  const related = getRelatedGames(slug);
+  const [{ prev, next }, related] = await Promise.all([
+    getAdjacentGames(slug),
+    getRelatedGames(slug),
+  ]);
 
   const jsonLd = {
     '@context': 'https://schema.org',

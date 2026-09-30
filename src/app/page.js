@@ -13,9 +13,12 @@ import { getSettings } from '@/lib/settings';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const posts = getAllPosts({ limit: 3 });
-  const games = getAllGames({ limit: 3 });
-  const [home, settings] = await Promise.all([getHome(), getSettings()]);
+  const [posts, games, home, settings] = await Promise.all([
+    getAllPosts({ limit: 3 }),
+    getAllGames({ limit: 3 }),
+    getHome(),
+    getSettings(),
+  ]);
   const { hero, mediaBanner, communityBanner } = home;
 
   return (

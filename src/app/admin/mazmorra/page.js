@@ -1,41 +1,12 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import MazmorraSelector from '@/components/admin/MazmorraSelector';
-
-async function getGamesAndCurrent() {
-  const dir = path.join(process.cwd(), 'src', 'content', 'catalogo');
-  const mazFile = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
-
-  const [files, mazRaw] = await Promise.all([
-    fs.readdir(dir).catch(() => []),
-    fs.readFile(mazFile, 'utf8').catch(() => 'null'),
-  ]);
-
-  const games = await Promise.all(
-    files
-      .filter((f) => f.endsWith('.md'))
-      .map(async (filename) => {
-        const raw = await fs.readFile(path.join(dir, filename), 'utf8');
-        const { data } = matter(raw);
-        return {
-          slug:    data.slug ?? filename.replace('.md', ''),
-          game:    data.game ?? '—',
-          title:   data.title ?? '',
-          excerpt: data.excerpt ?? '',
-          coverImage: data.coverImage ?? '',
-        };
-      }),
-  );
-
-  return { games, current: JSON.parse(mazRaw) };
-}
+import { getAllGames } from '@/lib/catalog';
+import { readContent } from '@/lib/siteContent';
 
 // Always reflect current data in the admin.
 export const dynamic = 'force-dynamic';
 
 export default async function MazmorraPage() {
-  const { games, current } = await getGamesAndCurrent();
+  const [games, current] = await Promise.all([getAllGames(), readContent('mazmorra')]);
 
   return (
     <div>
