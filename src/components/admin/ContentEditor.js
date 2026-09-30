@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from './RichTextEditor';
 
 // ---------------------------------------------------------------------------
 // Image uploader
@@ -54,84 +55,6 @@ export function Field({ label, children }) {
         {label}
       </label>
       {children}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Markdown body editor with a media toolbar.
-// Uploads images/GIFs/videos and inserts the right snippet at the cursor, so
-// media can be placed anywhere throughout the post/analysis body.
-// ---------------------------------------------------------------------------
-export function MarkdownEditor({ value, onChange, placeholder }) {
-  const taRef = useRef(null);
-  const imgInput = useRef(null);
-  const vidInput = useRef(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState('');
-
-  const insertAtCursor = (snippet) => {
-    const ta = taRef.current;
-    const start = ta?.selectionStart ?? value.length;
-    const end = ta?.selectionEnd ?? value.length;
-    const next = value.slice(0, start) + snippet + value.slice(end);
-    onChange(next);
-    requestAnimationFrame(() => {
-      if (!ta) return;
-      const pos = start + snippet.length;
-      ta.focus();
-      ta.setSelectionRange(pos, pos);
-    });
-  };
-
-  const handleFile = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = ''; // allow re-selecting the same file later
-    if (!file) return;
-    setUploading(true);
-    setError('');
-    try {
-      const form = new FormData();
-      form.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body: form });
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        setError(data.error || 'Error al subir el archivo');
-      } else if (data.kind === 'video') {
-        insertAtCursor(`\n\n<video src="${data.url}" controls playsinline style="max-width:100%"></video>\n\n`);
-      } else {
-        insertAtCursor(`\n\n![descripción](${data.url})\n\n`);
-      }
-    } catch {
-      setError('Error de red al subir');
-    }
-    setUploading(false);
-  };
-
-  const btn = 'text-[11px] font-body px-3 py-1.5 border border-brand-border text-brand-muted hover:border-brand-purple hover:text-brand-purple transition-colors disabled:opacity-50';
-
-  return (
-    <div>
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        <button type="button" onClick={() => imgInput.current?.click()} disabled={uploading} className={btn}>
-          🖼 Imagen / GIF
-        </button>
-        <button type="button" onClick={() => vidInput.current?.click()} disabled={uploading} className={btn}>
-          🎬 Vídeo
-        </button>
-        {uploading && <span className="text-brand-muted text-[11px] font-body">subiendo…</span>}
-        {error && <span className="text-red-400 text-[11px] font-body">{error}</span>}
-        <span className="text-brand-border text-[10px] font-body ml-auto">se inserta donde esté el cursor</span>
-      </div>
-      <textarea
-        ref={taRef}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="admin-textarea"
-        placeholder={placeholder}
-      />
-      <input ref={imgInput} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-      <input ref={vidInput} type="file" accept="video/*" onChange={handleFile} className="hidden" />
     </div>
   );
 }
@@ -190,7 +113,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           <p className="text-brand-muted text-xs mb-4 font-body">{form.date} · {form.category}</p>
           {form.coverImage && <img src={form.coverImage} alt="" className="w-full h-48 object-cover mb-4 pixel-border" />}
           <p className="text-brand-muted text-sm italic mb-6 font-body">{form.excerpt}</p>
-          <pre className="text-brand-text text-xs whitespace-pre-wrap font-body leading-relaxed">{form.content}</pre>
+          <div className="prose prose-invert max-w-none font-body" dangerouslySetInnerHTML={{ __html: form.content }} />
         </div>
       ) : (
         <>
@@ -224,7 +147,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           </Field>
 
           <Field label="CONTENIDO (Markdown)">
-            <MarkdownEditor
+            <RichTextEditor
               value={form.content}
               onChange={(v) => setForm((f) => ({ ...f, content: v }))}
               placeholder="## Título&#10;&#10;Contenido en Markdown. Usa los botones de arriba para insertar imágenes, GIFs o vídeos."
@@ -322,7 +245,7 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
           <p className="text-brand-muted text-xs mb-4 font-body">{form.date} · {form.genre}</p>
           {form.coverImage && <img src={form.coverImage} alt="" className="w-full h-48 object-cover mb-4 pixel-border" />}
           <p className="text-brand-muted text-sm italic mb-6 font-body">{form.excerpt}</p>
-          <pre className="text-brand-text text-xs whitespace-pre-wrap font-body leading-relaxed">{form.content}</pre>
+          <div className="prose prose-invert max-w-none font-body" dangerouslySetInnerHTML={{ __html: form.content }} />
         </div>
       ) : (
         <>
@@ -358,7 +281,7 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
           </Field>
 
           <Field label="CONTENIDO (Markdown)">
-            <MarkdownEditor
+            <RichTextEditor
               value={form.content}
               onChange={(v) => setForm((f) => ({ ...f, content: v }))}
               placeholder="## Título&#10;&#10;Contenido en Markdown. Usa los botones de arriba para insertar imágenes, GIFs o vídeos."
