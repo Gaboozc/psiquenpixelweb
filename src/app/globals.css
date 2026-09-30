@@ -162,3 +162,13 @@ body {
   border-color: #9b59f7;
   box-shadow: 0 0 0 2px rgba(155, 89, 247, 0.15);
 }
+
+/* Media embedded in article bodies (posts & catálogo) */
+.prose img,
+.prose video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+  border-radius: 2px;
+}
