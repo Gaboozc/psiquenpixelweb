@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import RichTextEditor from './RichTextEditor';
 
 // ---------------------------------------------------------------------------
 // Image uploader
@@ -112,7 +113,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           <p className="text-brand-muted text-xs mb-4 font-body">{form.date} · {form.category}</p>
           {form.coverImage && <img src={form.coverImage} alt="" className="w-full h-48 object-cover mb-4 pixel-border" />}
           <p className="text-brand-muted text-sm italic mb-6 font-body">{form.excerpt}</p>
-          <pre className="text-brand-text text-xs whitespace-pre-wrap font-body leading-relaxed">{form.content}</pre>
+          <div className="prose prose-invert max-w-none font-body" dangerouslySetInnerHTML={{ __html: form.content }} />
         </div>
       ) : (
         <>
@@ -146,7 +147,11 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           </Field>
 
           <Field label="CONTENIDO (Markdown)">
-            <textarea value={form.content} onChange={set('content')} className="admin-textarea" placeholder="## Título&#10;&#10;Contenido en Markdown..." />
+            <RichTextEditor
+              value={form.content}
+              onChange={(v) => setForm((f) => ({ ...f, content: v }))}
+              placeholder="## Título&#10;&#10;Contenido en Markdown. Usa los botones de arriba para insertar imágenes, GIFs o vídeos."
+            />
           </Field>
 
           <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -240,7 +245,7 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
           <p className="text-brand-muted text-xs mb-4 font-body">{form.date} · {form.genre}</p>
           {form.coverImage && <img src={form.coverImage} alt="" className="w-full h-48 object-cover mb-4 pixel-border" />}
           <p className="text-brand-muted text-sm italic mb-6 font-body">{form.excerpt}</p>
-          <pre className="text-brand-text text-xs whitespace-pre-wrap font-body leading-relaxed">{form.content}</pre>
+          <div className="prose prose-invert max-w-none font-body" dangerouslySetInnerHTML={{ __html: form.content }} />
         </div>
       ) : (
         <>
@@ -276,7 +281,11 @@ export function GameEditor({ initial, onSave, saveLabel = 'Guardar Análisis' })
           </Field>
 
           <Field label="CONTENIDO (Markdown)">
-            <textarea value={form.content} onChange={set('content')} className="admin-textarea" placeholder="## Título&#10;&#10;Contenido en Markdown..." />
+            <RichTextEditor
+              value={form.content}
+              onChange={(v) => setForm((f) => ({ ...f, content: v }))}
+              placeholder="## Título&#10;&#10;Contenido en Markdown. Usa los botones de arriba para insertar imágenes, GIFs o vídeos."
+            />
           </Field>
 
           <label className="flex items-center gap-3 cursor-pointer select-none">

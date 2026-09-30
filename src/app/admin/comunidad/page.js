@@ -1,6 +1,9 @@
 import { getComunidad } from '@/lib/comunidad';
 import ComunidadEditor from '@/components/admin/ComunidadEditor';
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminComunidadPage() {
   const comunidad = await getComunidad();
 

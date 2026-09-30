@@ -1,6 +1,9 @@
 import { readStore } from '@/lib/merch';
 import MerchTable from '@/components/admin/MerchTable';
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminMerchPage() {
   const { products, categories } = await readStore();
 

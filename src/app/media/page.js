@@ -123,15 +123,17 @@ export default async function MediaPage() {
 
               <MediaFeatures items={media.youtube.features} accentClass="text-brand-purple" />
 
-              <a
-                href={settings.social.youtube}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-brand-purple text-[9px] tracking-widest border border-brand-purple px-4 py-2 hover:bg-brand-purple/20 transition-colors"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
-                SUSCRIBIRSE AL CANAL →
-              </a>
+              {settings.social.youtube && (
+                <a
+                  href={settings.social.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-brand-purple text-[9px] tracking-widest border border-brand-purple px-4 py-2 hover:bg-brand-purple/20 transition-colors"
+                  style={{ fontFamily: 'var(--font-pixel)' }}
+                >
+                  SUSCRIBIRSE AL CANAL →
+                </a>
+              )}
             </div>
 
             {!media.youtube.comingSoon && media.youtube.embedUrl ? (
@@ -173,15 +175,17 @@ export default async function MediaPage() {
 
               <MediaFeatures items={media.spotify.features} accentClass="text-brand-amber" />
 
-              <a
-                href={settings.social.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-brand-amber text-[9px] tracking-widest border border-brand-amber px-4 py-2 hover:bg-brand-amber/20 transition-colors"
-                style={{ fontFamily: 'var(--font-pixel)' }}
-              >
-                SEGUIR EN SPOTIFY →
-              </a>
+              {settings.social.spotify && (
+                <a
+                  href={settings.social.spotify}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block text-brand-amber text-[9px] tracking-widest border border-brand-amber px-4 py-2 hover:bg-brand-amber/20 transition-colors"
+                  style={{ fontFamily: 'var(--font-pixel)' }}
+                >
+                  SEGUIR EN SPOTIFY →
+                </a>
+              )}
             </div>
 
             <EmbedOrPlaceholder section={media.spotify} icon="♫" color="#e8903a" />

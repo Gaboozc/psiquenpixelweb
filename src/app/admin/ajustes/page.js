@@ -1,6 +1,9 @@
 import { getSettings } from '@/lib/settings';
 import SettingsEditor from '@/components/admin/SettingsEditor';
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AjustesPage() {
   const settings = await getSettings();
 

@@ -11,7 +11,11 @@ const ICONS = [
   { id: 'twitch',    src: '/footer-icons/twitch.png',    label: 'Síguenos en Twitch'     },
 ];
 
-const FooterSocialBox = ({ links = {} }) => (
+const FooterSocialBox = ({ links = {} }) => {
+  const visible = ICONS.filter((i) => links[i.id]);
+  if (visible.length === 0) return null;
+
+  return (
   <div
     className="
       relative
@@ -41,10 +45,10 @@ const FooterSocialBox = ({ links = {} }) => (
         right:  '18%',
       }}
     >
-      {ICONS.map(({ id, src, label }) => (
+      {visible.map(({ id, src, label }) => (
         <Link
           key={id}
-          href={links[id] ?? '#'}
+          href={links[id]}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
@@ -65,11 +69,9 @@ const FooterSocialBox = ({ links = {} }) => (
           />
         </Link>
       ))}
-
-      {/* Placeholder vacío — posición 6 (fila 3, col 2) */}
-      <div aria-hidden="true" />
     </div>
   </div>
-);
+  );
+};
 
 export default FooterSocialBox;

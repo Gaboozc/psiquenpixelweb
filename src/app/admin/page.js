@@ -50,6 +50,9 @@ const StatCard = ({ label, value, href, color }) => (
   </Link>
 );
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const stats = await getStats();
 
