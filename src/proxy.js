@@ -44,16 +44,11 @@ async function verifySession(token) {
 export async function proxy(request) {
   const { pathname } = request.nextUrl;
 
-  // The secret admin URL prefix (must match NEXT_PUBLIC_ADMIN_PATH in .env.local)
-  const secretBase = process.env.NEXT_PUBLIC_ADMIN_PATH ?? '/pnp-vault';
-  const loginPath = `${secretBase}/login`;
+  // The admin URL prefix (matches NEXT_PUBLIC_ADMIN_PATH / adminPath.js).
+  const adminBase = process.env.NEXT_PUBLIC_ADMIN_PATH ?? '/admin';
+  const loginPath = `${adminBase}/login`;
 
-  // ── 1. Block direct access to the /admin filesystem path ────────────────
-  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
-    return new Response('Not Found', { status: 404 });
-  }
-
-  // ── 2. Protect admin API routes ─────────────────────────────────────────
+  // ── 1. Protect admin API routes ─────────────────────────────────────────
   if (pathname.startsWith('/api/admin/')) {
     // Auth and logout endpoints don't need a valid session
     if (pathname === '/api/admin/auth/login' || pathname === '/api/admin/auth/logout') {
@@ -66,14 +61,14 @@ export async function proxy(request) {
     return NextResponse.next();
   }
 
-  // ── 3. Handle the secret admin path ─────────────────────────────────────
-  if (pathname === secretBase || pathname.startsWith(`${secretBase}/`)) {
-    // Login page: no auth required — rewrite to internal /admin/login
+  // ── 2. Gate the admin panel ─────────────────────────────────────────────
+  if (pathname === adminBase || pathname.startsWith(`${adminBase}/`)) {
+    // Login page: no auth required
     if (pathname === loginPath || pathname === `${loginPath}/`) {
-      return NextResponse.rewrite(new URL('/admin/login', request.url));
+      return NextResponse.next();
     }
 
-    // All other admin pages: require valid session
+    // All other admin pages: require a valid session
     const token = request.cookies.get('pnp_admin_session')?.value;
     if (!token) {
       return NextResponse.redirect(new URL(loginPath, request.url));
@@ -84,13 +79,9 @@ export async function proxy(request) {
       res.cookies.delete('pnp_admin_session');
       return res;
     }
-
-    // Rewrite secret path → internal /admin path (URL stays secret in browser)
-    const internalPath = pathname.replace(secretBase, '/admin');
-    const rewriteUrl = new URL(internalPath + request.nextUrl.search, request.url);
-    return NextResponse.rewrite(rewriteUrl);
+    return NextResponse.next();
   }
 
-  // ── 4. All other routes pass through ────────────────────────────────────
+  // ── 3. All other routes pass through ────────────────────────────────────
   return NextResponse.next();
 }

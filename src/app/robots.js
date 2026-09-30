@@ -3,7 +3,7 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/admin', '/pnp-vault', '/api/'],
+      disallow: ['/admin', '/api/'],
     },
     sitemap: 'https://psiquenpixel.com/sitemap.xml',
   };
