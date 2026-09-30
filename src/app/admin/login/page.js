@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
         </form>
 
         <p className="text-center text-brand-border text-[8px] mt-4 font-body">
-          Define ADMIN_PASSWORD y NEXT_PUBLIC_ADMIN_PATH en .env.local
+          Acceso restringido
         </p>
       </div>
     </div>

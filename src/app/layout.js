@@ -4,6 +4,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import StyledComponentsRegistry from '@/lib/StyledComponentsRegistry';
 import { CartProvider } from '@/context/CartContext';
+import { Analytics } from '@vercel/analytics/next';
 
 const pressStart2P = Press_Start_2P({
   weight: '400',
@@ -41,14 +42,7 @@ export const metadata = {
     title: "Psique 'n' Pixel — Las Mazmorras de la Mente",
     description:
       "Análisis psicológico, narrativo y cultural de videojuegos. Exploramos las profundidades de la mente a través de los mundos digitales.",
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: "Psique 'n' Pixel",
-      },
-    ],
+    // OG image is provided by the generated src/app/opengraph-image.js
   },
   twitter: {
     card: 'summary_large_image',
@@ -71,6 +65,7 @@ export default function RootLayout({ children }) {
             <Footer />
           </CartProvider>
         </StyledComponentsRegistry>
+        <Analytics />
       </body>
     </html>
   );

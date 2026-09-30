@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
+import { readingTime, withHeadingIds } from './reading';
 
 const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'catalogo');
 
@@ -32,6 +33,40 @@ export const getAdjacentGames = (slug) => {
   };
 };
 
+// Games sharing the most tags with the given slug (excludes drafts and itself)
+export const getRelatedGames = (slug, limit = 3) => {
+  const games = getAllGames();
+  const current = games.find((g) => g.slug === slug);
+  if (!current) return [];
+  const currentTags = new Set(current.tags ?? []);
+
+  return games
+    .filter((g) => g.slug !== slug)
+    .map((g) => ({
+      game: g,
+      score: (g.tags ?? []).filter((t) => currentTags.has(t)).length,
+    }))
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score || new Date(b.game.date) - new Date(a.game.date))
+    .slice(0, limit)
+    .map((x) => x.game);
+};
+
+// Unique, sorted list of all tags across published games
+export const getAllGameTags = () => {
+  const tags = new Set();
+  getAllGames().forEach((g) => (g.tags ?? []).forEach((t) => tags.add(t)));
+  return [...tags].sort((a, b) => a.localeCompare(b, 'es'));
+};
+
+// All published games carrying a given tag (case-insensitive)
+export const getGamesByTag = (tag) => {
+  const needle = String(tag).toLowerCase();
+  return getAllGames().filter((g) =>
+    (g.tags ?? []).some((t) => t.toLowerCase() === needle),
+  );
+};
+
 // Read a single game analysis with full HTML content (markdown converted)
 export const getGameBySlug = (slug) => {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);
@@ -41,5 +76,13 @@ export const getGameBySlug = (slug) => {
   const raw = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(raw);
 
-  return { ...data, slug, content: marked.parse(content) };
+  const { html, headings } = withHeadingIds(marked.parse(content));
+
+  return {
+    ...data,
+    slug,
+    content: html,
+    headings,
+    readingTime: readingTime(content),
+  };
 };

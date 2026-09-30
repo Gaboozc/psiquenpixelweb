@@ -9,21 +9,27 @@ async function getStats() {
   const catDir     = path.join(process.cwd(), 'src', 'content', 'catalogo');
   const mazFile    = path.join(process.cwd(), 'src', 'data', 'mazmorra.json');
   const nlFile     = path.join(process.cwd(), 'src', 'data', 'newsletter.json');
+  const prodFile   = path.join(process.cwd(), 'src', 'data', 'products.json');
 
-  const [blogFiles, catFiles, mazRaw, nlRaw] = await Promise.all([
+  const [blogFiles, catFiles, mazRaw, nlRaw, prodRaw] = await Promise.all([
     fs.readdir(blogDir).catch(() => []),
     fs.readdir(catDir).catch(() => []),
     fs.readFile(mazFile, 'utf8').catch(() => 'null'),
     fs.readFile(nlFile,  'utf8').catch(() => '[]'),
+    fs.readFile(prodFile, 'utf8').catch(() => '{}'),
   ]);
 
   let subscribers = 0;
   try { subscribers = JSON.parse(nlRaw).length; } catch { /* empty */ }
 
+  let products = 0;
+  try { products = (JSON.parse(prodRaw).products ?? []).length; } catch { /* empty */ }
+
   return {
     posts: blogFiles.filter((f) => f.endsWith('.md')).length,
     games: catFiles.filter((f) => f.endsWith('.md')).length,
     subscribers,
+    products,
     mazmorra: JSON.parse(mazRaw),
   };
 }
@@ -55,10 +61,35 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <StatCard label="POSTS" value={stats.posts} href={ap('/posts')} color="text-brand-purple" />
         <StatCard label="CATÁLOGO" value={stats.games} href={ap('/catalogo')} color="text-brand-amber" />
+        <StatCard label="PRODUCTOS" value={stats.products} href={ap('/merch')} color="text-brand-amber" />
         <StatCard label="SUSCRIPTORES" value={stats.subscribers} href={ap('/newsletter')} color="text-green-400" />
+      </div>
+
+      {/* Site sections */}
+      <div className="mb-10">
+        <h2 className="text-brand-muted text-[9px] tracking-widest mb-4 font-body" style={{ fontFamily: 'var(--font-pixel)' }}>
+          SECCIONES DEL SITIO
+        </h2>
+        <div className="flex flex-wrap gap-3">
+          {[
+            ['🛒 Merch', ap('/merch')],
+            ['▶ Media', ap('/media')],
+            ['⚑ Comunidad', ap('/comunidad')],
+            ['⌂ Home', ap('/home')],
+            ['⚙ Ajustes', ap('/ajustes')],
+          ].map(([label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              className="border border-brand-border text-brand-muted text-xs px-4 py-2 font-body hover:text-brand-text hover:border-brand-purple transition-colors"
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
       </div>
 
       {/* Quick actions */}

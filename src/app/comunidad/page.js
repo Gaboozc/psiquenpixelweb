@@ -1,13 +1,21 @@
 import PageWrapper from '@/components/layout/PageWrapper';
 import Button from '@/components/ui/Button';
 import { getTwitchStreamStatus } from '@/lib/twitch';
+import { getComunidad } from '@/lib/comunidad';
+import { getSettings } from '@/lib/settings';
 
 export const metadata = {
   title: 'Comunidad',
   description: "Únete a la comunidad de Psique 'n' Pixel en Discord y sigue el directo en Twitch.",
 };
 
+// Render per-request so admin edits apply live (Twitch status is already live).
+export const dynamic = 'force-dynamic';
+
 export default async function ComunidadPage() {
+  const [comunidad, settings] = await Promise.all([getComunidad(), getSettings()]);
+  const { twitch: twitchCopy, discord } = comunidad;
+
   let twitch = { isLive: false };
   try {
     twitch = await getTwitchStreamStatus();
@@ -63,7 +71,7 @@ export default async function ComunidadPage() {
           )}
 
           <p className="text-brand-muted text-sm font-body leading-relaxed">
-            Sesiones de juego en vivo con análisis psicológico en tiempo real.
+            {twitchCopy.description}
             {twitch.isLive
               ? ' ¡Estamos en directo ahora mismo!'
               : ' Cuando estemos en directo, aquí verás el stream embebido.'}
@@ -92,7 +100,7 @@ export default async function ComunidadPage() {
             </div>
           )}
 
-          <Button variant="secondary" href="https://twitch.tv/psiquenpixel">
+          <Button variant="secondary" href={settings.social.twitch}>
             VER EN TWITCH
           </Button>
         </section>
@@ -117,8 +125,7 @@ export default async function ComunidadPage() {
           </h2>
 
           <p className="text-brand-muted text-sm font-body leading-relaxed">
-            Debates, recomendaciones, club de lectura de videojuegos y mucho más.
-            La Guild de Psique &apos;n&apos; Pixel te espera.
+            {discord.description}
           </p>
 
           {/* Discord invite card */}
@@ -131,8 +138,8 @@ export default async function ComunidadPage() {
                 <span className="text-brand-purple text-lg">⚔</span>
               </div>
               <div className="text-left">
-                <p className="text-brand-text text-xs font-body font-semibold">Psique &apos;n&apos; Pixel</p>
-                <p className="text-brand-muted text-[10px] font-body">Las Mazmorras de la Mente</p>
+                <p className="text-brand-text text-xs font-body font-semibold">{discord.serverName}</p>
+                <p className="text-brand-muted text-[10px] font-body">{discord.tagline}</p>
               </div>
             </div>
 
@@ -144,7 +151,7 @@ export default async function ComunidadPage() {
             </div>
 
             <a
-              href="https://discord.gg/psiquenpixel"
+              href={settings.social.discord}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full text-center bg-brand-amber text-brand-bg text-[9px] tracking-widest py-3 hover:bg-brand-amber-dim transition-colors"
@@ -155,7 +162,7 @@ export default async function ComunidadPage() {
           </div>
 
           <p className="text-brand-muted text-[10px] font-body">
-            Análisis colaborativos · Recomendaciones · Club de juego mensual
+            {discord.footnote}
           </p>
         </section>
 

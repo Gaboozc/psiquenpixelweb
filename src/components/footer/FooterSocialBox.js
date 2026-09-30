@@ -4,14 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const ICONS = [
-  { id: 'youtube',   src: '/footer-icons/youtube.png',   href: 'https://youtube.com/@psiquenpixel',          label: 'Síguenos en YouTube'   },
-  { id: 'discord',   src: '/footer-icons/discord.png',   href: 'https://discord.gg/psiquenpixel',             label: 'Únete a nuestro Discord' },
-  { id: 'spotify',   src: '/footer-icons/spotify.png',   href: 'https://open.spotify.com/show/psiquenpixel', label: 'Escúchanos en Spotify'  },
-  { id: 'instagram', src: '/footer-icons/instagram.png', href: 'https://instagram.com/psiquenpixel',          label: 'Síguenos en Instagram'  },
-  { id: 'twitch',    src: '/footer-icons/twitch.png',    href: 'https://twitch.tv/psiquenpixel',              label: 'Síguenos en Twitch'     },
+  { id: 'youtube',   src: '/footer-icons/youtube.png',   label: 'Síguenos en YouTube'   },
+  { id: 'discord',   src: '/footer-icons/discord.png',   label: 'Únete a nuestro Discord' },
+  { id: 'spotify',   src: '/footer-icons/spotify.png',   label: 'Escúchanos en Spotify'  },
+  { id: 'instagram', src: '/footer-icons/instagram.png', label: 'Síguenos en Instagram'  },
+  { id: 'twitch',    src: '/footer-icons/twitch.png',    label: 'Síguenos en Twitch'     },
 ];
 
-const FooterSocialBox = () => (
+const FooterSocialBox = ({ links = {} }) => (
   <div
     className="
       relative
@@ -41,10 +41,10 @@ const FooterSocialBox = () => (
         right:  '18%',
       }}
     >
-      {ICONS.map(({ id, src, href, label }) => (
+      {ICONS.map(({ id, src, label }) => (
         <Link
           key={id}
-          href={href}
+          href={links[id] ?? '#'}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}

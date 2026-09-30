@@ -48,11 +48,14 @@ export default function ProductCard({ product }) {
       >
         <span className="text-5xl select-none">{product.icon}</span>
 
-        {product.badge && (
-          <div className="absolute top-2 right-2">
+        <div className="absolute top-2 right-2 flex flex-col items-end gap-1">
+          {product.discountActive && (
+            <Badge color="amber">-{product.discountPercent}%</Badge>
+          )}
+          {product.badge && (
             <Badge color={BADGE_COLOR[product.badge] ?? 'purple'}>{product.badge}</Badge>
-          </div>
-        )}
+          )}
+        </div>
 
         {product.stock <= 10 && product.stock > 0 && (
           <div className="absolute bottom-2 left-2">
@@ -118,11 +121,21 @@ export default function ProductCard({ product }) {
 
         {/* Price + CTA */}
         <div className="flex items-center justify-between gap-2 mt-auto pt-3 border-t border-brand-border">
-          <span
-            className="text-brand-amber text-sm"
-            style={{ fontFamily: 'var(--font-pixel)' }}
-          >
-            €{product.price.toFixed(2)}
+          <span className="flex items-baseline gap-1.5">
+            {product.discountActive && (
+              <span
+                className="text-brand-muted text-[10px] line-through"
+                style={{ fontFamily: 'var(--font-pixel)' }}
+              >
+                €{product.originalPrice.toFixed(2)}
+              </span>
+            )}
+            <span
+              className="text-brand-amber text-sm"
+              style={{ fontFamily: 'var(--font-pixel)' }}
+            >
+              €{product.price.toFixed(2)}
+            </span>
           </span>
 
           <button

@@ -2,6 +2,10 @@ import crypto from 'crypto';
 
 const SECRET = process.env.ADMIN_SECRET ?? 'dev-secret-change-in-production';
 
+// Hardcoded admin password to start; overridable via ADMIN_PASSWORD env.
+// TODO: reemplazar por validación contra Supabase Auth.
+export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'psiquenpixel-admin';
+
 export function signSession(data) {
   const payload = Buffer.from(JSON.stringify(data)).toString('base64url');
   const sig = crypto.createHmac('sha256', SECRET).update(payload).digest('base64url');

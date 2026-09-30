@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 // ---------------------------------------------------------------------------
 // Image uploader
 // ---------------------------------------------------------------------------
-function ImageUpload({ value, onChange }) {
+export function ImageUpload({ value, onChange }) {
   const inputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
 
@@ -47,7 +47,7 @@ function ImageUpload({ value, onChange }) {
 // ---------------------------------------------------------------------------
 // Generic field
 // ---------------------------------------------------------------------------
-function Field({ label, children }) {
+export function Field({ label, children }) {
   return (
     <div>
       <label className="block text-brand-muted text-[8px] tracking-widest mb-1.5 font-body" style={{ fontFamily: 'var(--font-pixel)' }}>

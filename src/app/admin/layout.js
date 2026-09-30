@@ -9,8 +9,13 @@ const NAV_ITEMS = [
   { href: ap(),              label: 'Dashboard',        icon: '⊞', exact: true },
   { href: ap('/posts'),      label: 'Posts',             icon: '✦' },
   { href: ap('/catalogo'),   label: 'Catálogo',          icon: '⚔' },
+  { href: ap('/merch'),      label: 'Merch',             icon: '🛒' },
+  { href: ap('/media'),      label: 'Media',             icon: '▶' },
+  { href: ap('/comunidad'),  label: 'Comunidad',         icon: '⚑' },
+  { href: ap('/home'),       label: 'Home',              icon: '⌂' },
   { href: ap('/mazmorra'),   label: 'Mazmorra Semana',   icon: '★' },
   { href: ap('/newsletter'), label: 'Newsletter',        icon: '✉' },
+  { href: ap('/ajustes'),    label: 'Ajustes',           icon: '⚙' },
 ];
 
 function AdminSidebar({ onClose }) {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { revalidateBlog } from '@/lib/revalidate';
 
 export const runtime = 'nodejs';
 
@@ -38,6 +39,7 @@ export async function PUT(request, { params }) {
 
     const fileContent = matter.stringify(content || '', frontmatter);
     await fs.writeFile(filePath, fileContent, 'utf8');
+    revalidateBlog(slug);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Error actualizando post' }, { status: 500 });
@@ -49,6 +51,7 @@ export async function DELETE(request, { params }) {
   const filePath = path.join(CONTENT_DIR, `${slug}.md`);
   try {
     await fs.unlink(filePath);
+    revalidateBlog(slug);
     return NextResponse.json({ ok: true });
   } catch {
     return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
