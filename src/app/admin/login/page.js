@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ap } from '@/lib/adminPath';
 
 export default function AdminLoginPage() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,15 +19,15 @@ export default function AdminLoginPage() {
     const res = await fetch('/api/admin/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     });
 
     if (res.ok) {
       router.push(ap());
       router.refresh();
     } else {
-      const data = await res.json();
-      setError(data.error || 'Contraseña incorrecta');
+      const data = await res.json().catch(() => ({}));
+      setError(data.error || 'Email o contraseña incorrectos');
       setLoading(false);
     }
   };
@@ -56,6 +57,26 @@ export default function AdminLoginPage() {
           className="pixel-border-purple p-8 flex flex-col gap-5"
           style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
         >
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-brand-muted text-[8px] tracking-widest mb-2"
+              style={{ fontFamily: 'var(--font-pixel)' }}
+            >
+              EMAIL
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="username"
+              required
+              className="admin-input"
+              placeholder="tu@email.com"
+            />
+          </div>
+
           <div>
             <label
               htmlFor="password"
