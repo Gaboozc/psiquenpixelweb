@@ -5,24 +5,15 @@ const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'media.json');
 
 export const DEFAULT_MEDIA = {
   youtube: {
-    description:
-      'Análisis en vídeo, ensayos visuales y debates sobre psicología en los videojuegos. Suscríbete para no perderte ningún episodio.',
-    features: [
-      { label: 'Análisis en profundidad', desc: 'Disecciones de narrativa y psicología' },
-      { label: 'Ensayos visuales', desc: 'Documentales cortos sobre cultura gamer' },
-      { label: 'Debates y reseñas', desc: 'Conversaciones sobre los juegos del momento' },
-    ],
+    description: '',
+    features: [],
     comingSoon: true,
     embedUrl: '',
     channelId: '',
   },
   spotify: {
-    description:
-      'El podcast de Las Mazmorras de la Mente: conversaciones profundas sobre narrativa, psicología y cultura de los videojuegos.',
-    features: [
-      { label: 'Episodios de análisis', desc: 'Profundidad sin prisa' },
-      { label: 'Entrevistas', desc: 'Desarrolladores, psicólogos y críticos' },
-    ],
+    description: '',
+    features: [],
     comingSoon: true,
     embedUrl: '',
   },

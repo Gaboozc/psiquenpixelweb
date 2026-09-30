@@ -4,13 +4,6 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 
-const DEFAULT_PHRASES = [
-  'Exploramos la psicología detrás de los mundos digitales.',
-  'Narrativa, trauma y redención en los videojuegos.',
-  'Donde la mazmorra más profunda es la mente humana.',
-  'Análisis cultural de los juegos que nos forman.',
-];
-
 const DEFAULT_CTAS = [
   { label: 'LEER POSTS', href: '/blog' },
   { label: 'VER CATÁLOGO', href: '/catalogo' },
@@ -23,7 +16,8 @@ const useTypewriter = (phrases, speed = 55, pause = 2200) => {
   const [deleting,  setDeleting]  = useState(false);
 
   useEffect(() => {
-    const current = phrases[phraseIdx];
+    if (!phrases.length) return;
+    const current = phrases[phraseIdx % phrases.length] ?? '';
     const timeout = setTimeout(() => {
       if (!deleting) {
         setDisplayed(current.slice(0, charIdx + 1));
@@ -50,7 +44,7 @@ const useTypewriter = (phrases, speed = 55, pause = 2200) => {
 };
 
 export default function HeroSection({ phrases, ctas, videoUrl } = {}) {
-  const activePhrases = phrases?.length ? phrases : DEFAULT_PHRASES;
+  const activePhrases = phrases?.length ? phrases : [];
   const activeCtas = ctas?.length ? ctas : DEFAULT_CTAS;
   const activeVideo = videoUrl || '/video/hero-bg.mp4';
   const text = useTypewriter(activePhrases);
@@ -94,12 +88,14 @@ export default function HeroSection({ phrases, ctas, videoUrl } = {}) {
           className="w-[140vw] max-h-[55vh] sm:max-h-none sm:w-[90vw] md:w-[80%] xl:w-[70%] max-w-none sm:max-w-5xl h-auto object-contain drop-shadow-[0_0_40px_rgba(155,89,247,0.4)]"
         />
 
-        <p
-          className="px-4 text-brand-muted text-[9px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
-          style={{ fontFamily: 'var(--font-pixel)' }}
-        >
-          {text}<span className="cursor-blink">█</span>
-        </p>
+        {activePhrases.length > 0 && (
+          <p
+            className="px-4 text-brand-muted text-[9px] sm:text-[9px] md:text-[10px] tracking-widest text-center max-w-xs sm:max-w-sm md:max-w-lg min-h-[2.5rem] leading-relaxed"
+            style={{ fontFamily: 'var(--font-pixel)' }}
+          >
+            {text}<span className="cursor-blink">█</span>
+          </p>
+        )}
 
         <div className="px-4 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full max-w-xs sm:max-w-none">
           {activeCtas.map((cta, i) => (

@@ -7,15 +7,14 @@ const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'settings.json');
 // seed shape so every consumer can rely on these keys existing.
 export const DEFAULT_SETTINGS = {
   social: {
-    youtube: 'https://youtube.com/@psiquenpixel',
-    discord: 'https://discord.gg/psiquenpixel',
-    spotify: 'https://open.spotify.com/show/psiquenpixel',
-    instagram: 'https://instagram.com/psiquenpixel',
-    twitch: 'https://twitch.tv/psiquenpixel',
+    youtube: '',
+    discord: '',
+    spotify: '',
+    instagram: '',
+    twitch: '',
   },
   support: {
-    kofi: 'https://ko-fi.com/psiquenpixel',
-    patreon: 'https://patreon.com/psiquenpixel',
+    kofi: '',
   },
 };
 

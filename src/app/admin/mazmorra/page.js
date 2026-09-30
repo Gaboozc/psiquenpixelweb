@@ -31,6 +31,9 @@ async function getGamesAndCurrent() {
   return { games, current: JSON.parse(mazRaw) };
 }
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function MazmorraPage() {
   const { games, current } = await getGamesAndCurrent();
 

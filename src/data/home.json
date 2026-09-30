@@ -1,11 +1,6 @@
 {
   "hero": {
-    "phrases": [
-      "Exploramos la psicología detrás de los mundos digitales.",
-      "Narrativa, trauma y redención en los videojuegos.",
-      "Donde la mazmorra más profunda es la mente humana.",
-      "Análisis cultural de los juegos que nos forman."
-    ],
+    "phrases": [],
     "ctas": [
       { "label": "LEER POSTS", "href": "/blog" },
       { "label": "VER CATÁLOGO", "href": "/catalogo" }
@@ -13,19 +8,19 @@
     "videoUrl": "/video/hero-bg.mp4"
   },
   "mediaBanner": {
-    "eyebrow": "▶ CONTENIDO MULTIMEDIA",
-    "title": "También en vídeo y audio",
-    "text": "Análisis en profundidad en YouTube y episodios del podcast en Spotify. Síguenos para no perderte nada.",
-    "primaryLabel": "▶ IR A MEDIA",
+    "eyebrow": "",
+    "title": "",
+    "text": "",
+    "primaryLabel": "IR A MEDIA",
     "primaryHref": "/media",
-    "secondaryLabel": "♫ SPOTIFY"
+    "secondaryLabel": ""
   },
   "communityBanner": {
-    "eyebrow": "⚔ ÚNETE A LA GUILD",
-    "title": "La Comunidad",
-    "text": "Debates, recomendaciones y análisis colaborativos en nuestro servidor de Discord. Más de la mente, más del pixel.",
-    "primaryLabel": "JOIN THE GUILD ⚔",
+    "eyebrow": "",
+    "title": "",
+    "text": "",
+    "primaryLabel": "IR A COMUNIDAD",
     "primaryHref": "/comunidad",
-    "secondaryLabel": "VER EN TWITCH"
+    "secondaryLabel": ""
   }
 }

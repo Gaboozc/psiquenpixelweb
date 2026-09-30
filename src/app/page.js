@@ -117,7 +117,9 @@ export default async function Home() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <PillButton href={mediaBanner.primaryHref}>{mediaBanner.primaryLabel}</PillButton>
-              <PillButton href={settings.social.spotify}>{mediaBanner.secondaryLabel}</PillButton>
+              {mediaBanner.secondaryLabel && settings.social.spotify && (
+                <PillButton href={settings.social.spotify}>{mediaBanner.secondaryLabel}</PillButton>
+              )}
             </div>
           </div>
         </div>
@@ -149,7 +151,9 @@ export default async function Home() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <PillButton href={communityBanner.primaryHref}>{communityBanner.primaryLabel}</PillButton>
-              <PillButton href={settings.social.twitch}>{communityBanner.secondaryLabel}</PillButton>
+              {communityBanner.secondaryLabel && settings.social.twitch && (
+                <PillButton href={settings.social.twitch}>{communityBanner.secondaryLabel}</PillButton>
+              )}
             </div>
           </div>
         </div>

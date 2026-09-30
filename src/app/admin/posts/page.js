@@ -24,6 +24,9 @@ async function getPosts() {
   return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminPostsPage() {
   const posts = await getPosts();
 

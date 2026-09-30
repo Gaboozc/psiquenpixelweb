@@ -1,6 +1,9 @@
 import { getMedia } from '@/lib/media';
 import MediaEditor from '@/components/admin/MediaEditor';
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminMediaPage() {
   const media = await getMedia();
 

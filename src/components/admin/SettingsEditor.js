@@ -14,7 +14,6 @@ const SOCIAL_FIELDS = [
 
 const SUPPORT_FIELDS = [
   ['kofi', 'KO-FI'],
-  ['patreon', 'PATREON'],
 ];
 
 export default function SettingsEditor({ initial }) {

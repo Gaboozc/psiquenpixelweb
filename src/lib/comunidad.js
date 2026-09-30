@@ -5,14 +5,13 @@ const DATA_FILE = path.join(process.cwd(), 'src', 'data', 'comunidad.json');
 
 export const DEFAULT_COMUNIDAD = {
   twitch: {
-    description: 'Sesiones de juego en vivo con análisis psicológico en tiempo real.',
+    description: '',
   },
   discord: {
-    serverName: "Psique 'n' Pixel",
-    tagline: 'Las Mazmorras de la Mente',
-    description:
-      "Debates, recomendaciones, club de lectura de videojuegos y mucho más. La Guild de Psique 'n' Pixel te espera.",
-    footnote: 'Análisis colaborativos · Recomendaciones · Club de juego mensual',
+    serverName: '',
+    tagline: '',
+    description: '',
+    footnote: '',
   },
 };
 

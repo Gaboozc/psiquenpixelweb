@@ -100,9 +100,11 @@ export default async function ComunidadPage() {
             </div>
           )}
 
-          <Button variant="secondary" href={settings.social.twitch}>
-            VER EN TWITCH
-          </Button>
+          {settings.social.twitch && (
+            <Button variant="secondary" href={settings.social.twitch}>
+              VER EN TWITCH
+            </Button>
+          )}
         </section>
 
         {/* ── Discord ──────────────────────────────────────────────────── */}
@@ -150,15 +152,17 @@ export default async function ComunidadPage() {
               </div>
             </div>
 
-            <a
-              href={settings.social.discord}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full text-center bg-brand-amber text-brand-bg text-[9px] tracking-widest py-3 hover:bg-brand-amber-dim transition-colors"
-              style={{ fontFamily: 'var(--font-pixel)', boxShadow: '3px 3px 0 #a8621a' }}
-            >
-              UNIRSE AL DISCORD ⚔
-            </a>
+            {settings.social.discord && (
+              <a
+                href={settings.social.discord}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full text-center bg-brand-amber text-brand-bg text-[9px] tracking-widest py-3 hover:bg-brand-amber-dim transition-colors"
+                style={{ fontFamily: 'var(--font-pixel)', boxShadow: '3px 3px 0 #a8621a' }}
+              >
+                UNIRSE AL DISCORD ⚔
+              </a>
+            )}
           </div>
 
           <p className="text-brand-muted text-[10px] font-body">

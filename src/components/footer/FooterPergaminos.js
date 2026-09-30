@@ -137,24 +137,17 @@ export default function FooterPergaminos({ mazmorra, support = {} }) {
             Si nuestro contenido te aporta valor, considera apoyar la mazmorra.
           </p>
           <div className="flex flex-col gap-2 mt-auto">
-            <a
-              href={support.kofi ?? '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-3 hover:border-brand-amber hover:text-brand-amber transition-colors"
-              style={{ fontFamily: 'var(--font-pixel)' }}
-            >
-              ☕ KO-FI
-            </a>
-            <a
-              href={support.patreon ?? '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-center text-brand-text text-[8px] tracking-widest border border-brand-purple/50 px-3 py-3 hover:border-brand-purple hover:text-brand-purple transition-colors"
-              style={{ fontFamily: 'var(--font-pixel)' }}
-            >
-              ▲ PATREON
-            </a>
+            {support.kofi && (
+              <a
+                href={support.kofi}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-center text-brand-text text-[8px] tracking-widest border border-brand-amber/50 px-3 py-3 hover:border-brand-amber hover:text-brand-amber transition-colors"
+                style={{ fontFamily: 'var(--font-pixel)' }}
+              >
+                ☕ KO-FI
+              </a>
+            )}
           </div>
         </div>
 

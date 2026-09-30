@@ -16,6 +16,9 @@ async function getSubscribers() {
   }
 }
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminNewsletterPage() {
   const subscribers = await getSubscribers();
 

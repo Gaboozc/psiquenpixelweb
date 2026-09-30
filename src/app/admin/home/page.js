@@ -1,6 +1,9 @@
 import { getHome } from '@/lib/home';
 import HomeEditor from '@/components/admin/HomeEditor';
 
+// Always reflect current data in the admin.
+export const dynamic = 'force-dynamic';
+
 export default async function AdminHomePage() {
   const home = await getHome();
 
