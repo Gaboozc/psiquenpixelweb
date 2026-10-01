@@ -1,6 +1,7 @@
 import PageWrapper from '@/components/layout/PageWrapper';
-import ArticleCard from '@/components/blog/ArticleCard';
+import BlogExplorer from '@/components/blog/BlogExplorer';
 import { getAllPosts } from '@/lib/posts';
+import { getPublishedSagas } from '@/lib/sagas';
 
 export const metadata = {
   title: 'Posts',
@@ -13,6 +14,7 @@ export const revalidate = 60;
 
 export default async function PostsPage() {
   const posts = await getAllPosts();
+  const sagas = await getPublishedSagas(posts);
 
   return (
     <PageWrapper
@@ -32,11 +34,7 @@ export default async function PostsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => (
-            <ArticleCard key={post.slug} {...post} />
-          ))}
-        </div>
+        <BlogExplorer posts={posts} sagas={sagas} />
       )}
     </PageWrapper>
   );

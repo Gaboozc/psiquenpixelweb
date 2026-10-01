@@ -2,8 +2,8 @@ import { marked } from 'marked';
 import { getSupabase } from './supabase';
 import { readingTime, withHeadingIds } from './reading';
 
-// Shared data access for the two article collections (posts, games), backed by
-// Supabase tables of the same shape. Public pages only see published rows.
+// Data access for blog posts (which include the game analyses), backed by the
+// Supabase `posts` table. Public pages only see published rows.
 // Reads never throw: on a missing/misconfigured Supabase they log and return an
 // empty result, so a build or page render degrades to "no content yet".
 
@@ -24,21 +24,10 @@ export function rowToPost(r) {
     tags: r.tags ?? [],
     content: r.content,
     published: r.published,
-  };
-}
-
-export function rowToGame(r) {
-  return {
-    slug: r.slug,
-    game: r.game,
-    title: r.title,
-    date: r.date,
-    genre: r.genre ?? [],
-    excerpt: r.excerpt,
-    coverImage: r.cover_image,
-    tags: r.tags ?? [],
-    content: r.content,
-    published: r.published,
+    game: r.game ?? '',
+    sagaSlug: r.saga_slug ?? null,
+    sagaOrder: r.saga_order ?? 0,
+    sagaIntro: r.saga_intro ?? false,
   };
 }
 

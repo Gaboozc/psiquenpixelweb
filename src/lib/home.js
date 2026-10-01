@@ -5,7 +5,7 @@ export const DEFAULT_HOME = {
     phrases: [],
     ctas: [
       { label: 'LEER POSTS', href: '/blog' },
-      { label: 'VER CATÁLOGO', href: '/catalogo' },
+      { label: 'VER CATÁLOGO', href: '/merch' },
     ],
     videoUrl: '/video/hero-bg.mp4',
   },

@@ -3,7 +3,9 @@ import Image from 'next/image';
 import Badge from '@/components/ui/Badge';
 import { formatDate } from '@/lib/format';
 
-const ArticleCard = ({ title, excerpt, slug, date, tags = [], category, coverImage }) => (
+// `sagaTitle` + `partLabel` are passed when the card is shown outside its saga
+// page (e.g. search results), so readers know it belongs to a series.
+const ArticleCard = ({ title, excerpt, slug, date, tags = [], category, coverImage, game, sagaTitle, partLabel }) => (
   <Link href={`/blog/${slug}`} className="block group">
     <article
       className="pixel-border h-full flex flex-col transition-all duration-150 group-hover:-translate-x-0.5 group-hover:-translate-y-0.5 group-hover:pixel-border-purple"
@@ -38,9 +40,19 @@ const ArticleCard = ({ title, excerpt, slug, date, tags = [], category, coverIma
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-1 gap-3">
-        {/* Category + date */}
+        {/* Saga membership */}
+        {sagaTitle && (
+          <p className="text-brand-amber text-[8px] tracking-widest truncate" style={{ fontFamily: 'var(--font-pixel)' }}>
+            ⚔ {sagaTitle}{partLabel ? ` · ${partLabel}` : ''}
+          </p>
+        )}
+
+        {/* Category / game + date */}
         <div className="flex items-center justify-between gap-2 flex-wrap">
-          {category && <Badge color="purple">{category}</Badge>}
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {game && <Badge color="amber">{game}</Badge>}
+            {category && <Badge color="purple">{category}</Badge>}
+          </div>
           {date && (
             <span
               className="text-brand-muted text-[8px]"

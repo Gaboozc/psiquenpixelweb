@@ -1,8 +1,20 @@
--- Psique 'n' Pixel — esquema inicial de Supabase (fase 1: contenido + storage)
+-- Psique 'n' Pixel — esquema completo de Supabase (para un proyecto NUEVO).
 -- Ejecutar completo en: Supabase Dashboard → SQL Editor → New query → Run.
 -- Es idempotente: se puede volver a ejecutar sin romper nada.
+-- Si tu base ya tiene un esquema anterior, aplica en su lugar los archivos de
+-- supabase/migrations/ que falten, en orden.
 
--- ── Posts del blog ──────────────────────────────────────────────────────────
+-- ── Sagas: agrupan posts en orden (con una introducción opcional) ───────────
+create table if not exists public.sagas (
+  slug         text primary key,
+  title        text not null,
+  description  text not null default '',
+  cover_image  text not null default '',
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+
+-- ── Posts del blog (incluye los análisis de juegos) ─────────────────────────
 create table if not exists public.posts (
   slug         text primary key,
   title        text not null,
@@ -13,25 +25,18 @@ create table if not exists public.posts (
   tags         text[] not null default '{}',
   content      text not null default '',
   published    boolean not null default true,
+  game         text not null default '',
+  saga_slug    text references public.sagas (slug) on update cascade on delete set null,
+  saga_order   integer not null default 0,
+  saga_intro   boolean not null default false,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
 
--- ── Análisis del catálogo ───────────────────────────────────────────────────
-create table if not exists public.games (
-  slug         text primary key,
-  game         text not null,
-  title        text not null,
-  date         date not null default current_date,
-  genre        text[] not null default '{}',
-  excerpt      text not null default '',
-  cover_image  text not null default '',
-  tags         text[] not null default '{}',
-  content      text not null default '',
-  published    boolean not null default true,
-  created_at   timestamptz not null default now(),
-  updated_at   timestamptz not null default now()
-);
+create index if not exists posts_saga_idx on public.posts (saga_slug, saga_order);
+-- Como mucho UNA introducción por saga.
+create unique index if not exists posts_one_intro_per_saga
+  on public.posts (saga_slug) where saga_intro;
 
 -- ── Suscriptores de la newsletter ───────────────────────────────────────────
 create table if not exists public.subscribers (
@@ -52,7 +57,7 @@ create table if not exists public.site_content (
 -- tabla de suscriptores) van por el servidor con la service_role, que se salta
 -- RLS. Sin políticas de escritura = nadie puede escribir desde el navegador.
 alter table public.posts        enable row level security;
-alter table public.games        enable row level security;
+alter table public.sagas        enable row level security;
 alter table public.subscribers  enable row level security;
 alter table public.site_content enable row level security;
 
@@ -60,9 +65,9 @@ drop policy if exists "public read published posts" on public.posts;
 create policy "public read published posts"
   on public.posts for select using (published = true);
 
-drop policy if exists "public read published games" on public.games;
-create policy "public read published games"
-  on public.games for select using (published = true);
+drop policy if exists "public read sagas" on public.sagas;
+create policy "public read sagas"
+  on public.sagas for select using (true);
 
 drop policy if exists "public read site content" on public.site_content;
 create policy "public read site content"

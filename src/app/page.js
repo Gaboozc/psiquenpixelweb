@@ -2,10 +2,10 @@ import PixelDivider from '@/components/ui/PixelDivider';
 import Button from '@/components/ui/Button';
 import PillButton from '@/components/ui/PillButton';
 import ArticleCard from '@/components/blog/ArticleCard';
-import GameCard from '@/components/catalogo/GameCard';
+import ProductCard from '@/components/merch/ProductCard';
 import HeroSection from '@/components/home/HeroSection';
 import { getAllPosts } from '@/lib/posts';
-import { getAllGames } from '@/lib/catalog';
+import { getProducts } from '@/lib/merch';
 import { getHome } from '@/lib/home';
 import { getSettings } from '@/lib/settings';
 
@@ -13,13 +13,17 @@ import { getSettings } from '@/lib/settings';
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const [posts, games, home, settings] = await Promise.all([
+  const [posts, allProducts, home, settings] = await Promise.all([
     getAllPosts({ limit: 3 }),
-    getAllGames({ limit: 3 }),
+    getProducts(),
     getHome(),
     getSettings(),
   ]);
   const { hero, mediaBanner, communityBanner } = home;
+  // Store preview: in-stock products first, discounted ones on top.
+  const products = [...allProducts]
+    .sort((a, b) => Number(b.stock > 0) - Number(a.stock > 0) || Number(b.discountActive) - Number(a.discountActive))
+    .slice(0, 3);
 
   return (
     <>
@@ -62,39 +66,43 @@ export default async function Home() {
 
       <PixelDivider />
 
-      {/* ── Game catalog ─────────────────────────────────────────────────── */}
-      <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-surface">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-12 text-center">
-            <p
-              className="text-brand-amber text-[9px] tracking-widest mb-3"
-              style={{ fontFamily: 'var(--font-pixel)' }}
-            >
-              ⚔ ANÁLISIS ⚔
-            </p>
-            <h2
-              className="text-brand-text text-xl md:text-2xl"
-              style={{ fontFamily: 'var(--font-pixel)' }}
-            >
-              Catálogo
-            </h2>
-          </div>
+      {products.length > 0 && (
+        <>
+          {/* ── Catálogo (tienda) ──────────────────────────────────────────── */}
+          <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-surface">
+            <div className="max-w-7xl mx-auto">
+              <div className="mb-12 text-center">
+                <p
+                  className="text-brand-amber text-[9px] tracking-widest mb-3"
+                  style={{ fontFamily: 'var(--font-pixel)' }}
+                >
+                  ⚔ LA FORJA ⚔
+                </p>
+                <h2
+                  className="text-brand-text text-xl md:text-2xl"
+                  style={{ fontFamily: 'var(--font-pixel)' }}
+                >
+                  Catálogo
+                </h2>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {games.map((game) => (
-              <GameCard key={game.slug} {...game} />
-            ))}
-          </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
 
-          <div className="mt-10 text-center">
-            <Button variant="secondary" href="/catalogo">
-              VER CATÁLOGO COMPLETO
-            </Button>
-          </div>
-        </div>
-      </section>
+              <div className="mt-10 text-center">
+                <Button variant="secondary" href="/merch">
+                  VER CATÁLOGO COMPLETO
+                </Button>
+              </div>
+            </div>
+          </section>
 
-      <PixelDivider />
+          <PixelDivider />
+        </>
+      )}
 
       {/* ── Media banner ─────────────────────────────────────────────────── */}
       <section className="py-10 sm:py-14 md:py-20 px-4 dungeon-bg">

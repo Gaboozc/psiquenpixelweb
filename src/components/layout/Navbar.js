@@ -10,8 +10,7 @@ const navLinks = [
   { href: '/blog',      label: 'Posts',     icon: '/iconos/posts.png'      },
   { href: '/media',     label: 'Media',     icon: '/iconos/media.png'      },
   { href: '/comunidad', label: 'Comunidad', icon: '/iconos/comunidad.png'  },
-  { href: '/merch',     label: 'Merch',     icon: '/iconos/merch.png'      },
-  { href: '/catalogo',  label: 'Catálogo',  icon: '/iconos/inventario.png' },
+  { href: '/merch',     label: 'Catálogo',  icon: '/iconos/merch.png'      },
 ];
 
 const Navbar = () => {
