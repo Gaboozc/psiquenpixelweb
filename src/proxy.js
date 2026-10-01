@@ -16,9 +16,17 @@ function base64urlDecode(str) {
   return Uint8Array.from(binary, (c) => c.charCodeAt(0));
 }
 
+// Must match getSessionSecret() in src/lib/adminAuth.js. No built-in default:
+// with no secret configured, no session is ever valid (fail closed).
+function getSessionSecret() {
+  if (process.env.ADMIN_SECRET) return process.env.ADMIN_SECRET;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  return key ? `pnp-admin:${key}` : null;
+}
+
 async function verifySession(token) {
-  const secret = process.env.ADMIN_SECRET ?? 'dev-secret-change-in-production';
-  if (!token) return false;
+  const secret = getSessionSecret();
+  if (!secret || !token) return false;
   const dotIdx = token.lastIndexOf('.');
   if (dotIdx === -1) return false;
   const payload = token.slice(0, dotIdx);
@@ -32,7 +40,11 @@ async function verifySession(token) {
       false,
       ['verify'],
     );
-    return crypto.subtle.verify('HMAC', key, base64urlDecode(sig), enc.encode(payload));
+    const validSig = await crypto.subtle.verify('HMAC', key, base64urlDecode(sig), enc.encode(payload));
+    if (!validSig) return false;
+    // Signature is good — also require the session not to be expired.
+    const data = JSON.parse(new TextDecoder().decode(base64urlDecode(payload)));
+    return typeof data.exp === 'number' && data.exp > Date.now();
   } catch {
     return false;
   }
