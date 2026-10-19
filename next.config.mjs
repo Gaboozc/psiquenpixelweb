@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async redirects() {
-    return [
-      // "Catálogo" is now the merch store, which lives at /merch. The old
-      // game-analysis section moved into the blog. Temporary (307) on purpose,
-      // so the URL scheme can still change without browsers caching it forever.
-      { source: '/catalogo/:path*', destination: '/merch', permanent: false },
-    ];
+  // Las portadas y subidas viven en el Storage del proyecto actual de Supabase;
+  // sin este permiso el optimizador de imágenes rechaza esas URLs (400).
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'bwtowhgbpzthnemllxjc.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
   },
 };
 
