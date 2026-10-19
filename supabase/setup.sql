@@ -1,8 +1,12 @@
--- Psique 'n' Pixel — esquema completo de Supabase (para un proyecto NUEVO).
+-- Psique 'n' Pixel — script COMPLETO de Supabase (todo en uno).
+--
+-- Sirve para los dos casos:
+--   · base nueva  → crea todo;
+--   · base existente (con el esquema inicial ya aplicado) → añade lo que falte
+--     sin tocar tus datos.
+-- Es idempotente: se puede ejecutar las veces que quieras.
+--
 -- Ejecutar completo en: Supabase Dashboard → SQL Editor → New query → Run.
--- Es idempotente: se puede volver a ejecutar sin romper nada.
--- Si tu base ya tiene un esquema anterior, aplica en su lugar los archivos de
--- supabase/migrations/ que falten, en orden.
 
 -- ── Sagas: agrupan posts en orden (con una introducción opcional) ───────────
 create table if not exists public.sagas (
@@ -25,13 +29,25 @@ create table if not exists public.posts (
   tags         text[] not null default '{}',
   content      text not null default '',
   published    boolean not null default true,
-  game         text not null default '',
-  saga_slug    text references public.sagas (slug) on update cascade on delete set null,
-  saga_order   integer not null default 0,
-  saga_intro   boolean not null default false,
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+
+-- Columnas añadidas después (no hacen nada si ya existen).
+alter table public.posts add column if not exists game       text    not null default '';
+alter table public.posts add column if not exists saga_slug  text;
+alter table public.posts add column if not exists saga_order integer not null default 0;
+alter table public.posts add column if not exists saga_intro boolean not null default false;
+
+-- FK de saga: si se borra una saga, sus posts quedan sueltos (no se borran).
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'posts_saga_slug_fkey') then
+    alter table public.posts
+      add constraint posts_saga_slug_fkey foreign key (saga_slug)
+      references public.sagas (slug) on update cascade on delete set null;
+  end if;
+end $$;
 
 create index if not exists posts_saga_idx on public.posts (saga_slug, saga_order);
 -- Como mucho UNA introducción por saga.
@@ -54,7 +70,7 @@ create table if not exists public.site_content (
 
 -- ── Row Level Security ──────────────────────────────────────────────────────
 -- El sitio público solo puede LEER lo publicado. Todas las escrituras (y la
--- tabla de suscriptores) van por el servidor con la service_role, que se salta
+-- tabla de suscriptores) van por el servidor con la clave secreta, que se salta
 -- RLS. Sin políticas de escritura = nadie puede escribir desde el navegador.
 alter table public.posts        enable row level security;
 alter table public.sagas        enable row level security;
@@ -73,7 +89,7 @@ drop policy if exists "public read site content" on public.site_content;
 create policy "public read site content"
   on public.site_content for select using (true);
 
--- subscribers: sin políticas → inaccesible desde el navegador (solo service_role).
+-- subscribers: sin políticas → inaccesible desde el navegador.
 
 -- ── Storage: bucket público para imágenes / GIFs / vídeos ───────────────────
 insert into storage.buckets (id, name, public)
@@ -88,3 +104,8 @@ create policy "public read uploads"
 insert into public.site_content (key, value) values
   ('settings', '{"social":{"youtube":"","discord":"","spotify":"","instagram":"","twitch":""},"support":{"kofi":"https://ko-fi.com/psiquenpixel"}}'::jsonb)
 on conflict (key) do nothing;
+
+-- ── Limpieza opcional ───────────────────────────────────────────────────────
+-- La tabla "games" (antigua sección de análisis) ya no se usa. Si existe y
+-- quieres borrarla, descomenta la línea siguiente:
+-- drop table if exists public.games;
