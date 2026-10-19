@@ -16,7 +16,7 @@ export async function PUT(request) {
       return NextResponse.json({ error: 'slug es obligatorio' }, { status: 400 });
     }
 
-    const data = { slug, game: game || slug, title: title || '', excerpt: excerpt || '', coverImage: coverImage || '' };
+    const data = { slug, game: game || '', title: title || '', excerpt: excerpt || '', coverImage: coverImage || '' };
     await writeContent('mazmorra', data);
     revalidateSiteChrome();
     return NextResponse.json({ ok: true });

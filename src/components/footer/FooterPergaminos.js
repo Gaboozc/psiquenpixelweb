@@ -103,9 +103,11 @@ export default function FooterPergaminos({ mazmorra, support = {} }) {
 
           {mazmorra ? (
             <>
-              <p className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>
-                {mazmorra.game}
-              </p>
+              {mazmorra.game && (
+                <p className="text-brand-purple text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>
+                  {mazmorra.game}
+                </p>
+              )}
               <p className="text-brand-text text-xs font-body leading-snug line-clamp-2">
                 {mazmorra.title}
               </p>
@@ -113,7 +115,7 @@ export default function FooterPergaminos({ mazmorra, support = {} }) {
                 {mazmorra.excerpt}
               </p>
               <Link
-                href={`/catalogo/${mazmorra.slug}`}
+                href={`/blog/${mazmorra.slug}`}
                 className="text-brand-amber text-[8px] tracking-wider hover:text-brand-amber-dim transition-colors mt-auto pt-1"
                 style={{ fontFamily: 'var(--font-pixel)' }}
               >

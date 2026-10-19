@@ -5,7 +5,7 @@ import { adminList } from '@/lib/adminArticles';
 
 async function getPosts() {
   try {
-    const rows = await adminList('posts');
+    const rows = await adminList();
     return {
       error: null,
       posts: rows.map((r) => ({
@@ -14,6 +14,8 @@ async function getPosts() {
         date: r.date || '',
         category: r.category || '—',
         published: r.published,
+        game: r.game || '',
+        saga: r.sagaSlug ? (r.sagaIntro ? `${r.sagaSlug} · intro` : `${r.sagaSlug} · parte ${r.sagaOrder}`) : '',
       })),
     };
   } catch (e) {

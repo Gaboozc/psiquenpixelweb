@@ -28,7 +28,9 @@ export default function PostsTable({ posts }) {
         (p) =>
           p.title.toLowerCase().includes(query.toLowerCase()) ||
           p.slug.toLowerCase().includes(query.toLowerCase()) ||
-          (p.category ?? '').toLowerCase().includes(query.toLowerCase()),
+          (p.category ?? '').toLowerCase().includes(query.toLowerCase()) ||
+          (p.game ?? '').toLowerCase().includes(query.toLowerCase()) ||
+          (p.saga ?? '').toLowerCase().includes(query.toLowerCase()),
       )
     : posts;
 
@@ -63,7 +65,7 @@ export default function PostsTable({ posts }) {
               <tr className="border-b border-brand-border">
                 <th className="text-left text-brand-muted text-[9px] tracking-widest py-2 pr-4 font-normal" style={{ fontFamily: 'var(--font-pixel)' }}>TÍTULO</th>
                 <th className="text-left text-brand-muted text-[9px] tracking-widest py-2 pr-4 font-normal hidden sm:table-cell" style={{ fontFamily: 'var(--font-pixel)' }}>ESTADO</th>
-                <th className="text-left text-brand-muted text-[9px] tracking-widest py-2 pr-4 font-normal hidden md:table-cell" style={{ fontFamily: 'var(--font-pixel)' }}>CATEGORÍA</th>
+                <th className="text-left text-brand-muted text-[9px] tracking-widest py-2 pr-4 font-normal hidden md:table-cell" style={{ fontFamily: 'var(--font-pixel)' }}>JUEGO / SAGA</th>
                 <th className="text-left text-brand-muted text-[9px] tracking-widest py-2 pr-4 font-normal hidden lg:table-cell" style={{ fontFamily: 'var(--font-pixel)' }}>FECHA</th>
                 <th className="text-right py-2" />
               </tr>
@@ -84,7 +86,10 @@ export default function PostsTable({ posts }) {
                   <td className="py-3 pr-4 hidden sm:table-cell">
                     <StatusBadge published={post.published} />
                   </td>
-                  <td className="py-3 pr-4 text-brand-muted hidden md:table-cell">{post.category}</td>
+                  <td className="py-3 pr-4 text-brand-muted hidden md:table-cell">
+                    {post.game || post.category}
+                    {post.saga && <span className="block text-brand-amber text-[10px]">⚔ {post.saga}</span>}
+                  </td>
                   <td className="py-3 pr-4 text-brand-muted hidden lg:table-cell">{post.date}</td>
                   <td className="py-3 text-right whitespace-nowrap">
                     <Link

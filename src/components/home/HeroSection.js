@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 
 const DEFAULT_CTAS = [
   { label: 'LEER POSTS', href: '/blog' },
-  { label: 'VER CATÁLOGO', href: '/catalogo' },
+  { label: 'VER CATÁLOGO', href: '/merch' },
 ];
 
 const useTypewriter = (phrases, speed = 55, pause = 2200) => {

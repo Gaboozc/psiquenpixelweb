@@ -31,8 +31,8 @@ export default function MazmorraSelector({ games, current }) {
         <div className="pixel-border-amber p-4 mb-2"
           style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <p className="text-brand-amber text-[8px] tracking-widest mb-1" style={{ fontFamily: 'var(--font-pixel)' }}>ACTUAL</p>
-          <p className="text-brand-text text-sm font-body font-medium">{current.game}</p>
-          <p className="text-brand-muted text-xs font-body">{current.title}</p>
+          <p className="text-brand-text text-sm font-body font-medium">{current.game || current.title}</p>
+          {current.game && <p className="text-brand-muted text-xs font-body">{current.title}</p>}
         </div>
       )}
 
@@ -43,7 +43,7 @@ export default function MazmorraSelector({ games, current }) {
         </p>
 
         {games.length === 0 ? (
-          <p className="text-brand-muted text-sm font-body">No hay juegos en el catálogo.</p>
+          <p className="text-brand-muted text-sm font-body">No hay posts publicados todavía. Publica uno en Posts para poder elegirlo.</p>
         ) : (
           <div className="space-y-2">
             {games.map((game) => (
@@ -64,7 +64,7 @@ export default function MazmorraSelector({ games, current }) {
                   className="mt-0.5 accent-brand-purple shrink-0"
                 />
                 <div className="min-w-0">
-                  <p className="text-brand-amber text-xs font-body font-medium">{game.game}</p>
+                  {(game.game || game.category) && <p className="text-brand-amber text-xs font-body font-medium">{game.game || game.category}</p>}
                   <p className="text-brand-text text-sm font-body line-clamp-1">{game.title}</p>
                   {game.excerpt && (
                     <p className="text-brand-muted text-xs font-body line-clamp-2 mt-1">{game.excerpt}</p>

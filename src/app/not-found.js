@@ -50,7 +50,7 @@ export default function NotFound() {
         </div>
 
         <Link
-          href="/catalogo"
+          href="/merch"
           className="text-brand-muted text-[8px] tracking-widest hover:text-brand-amber transition-colors"
           style={{ fontFamily: 'var(--font-pixel)' }}
         >

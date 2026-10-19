@@ -17,15 +17,15 @@ async function countRows(table) {
 }
 
 async function getStats() {
-  const [posts, games, subscribers, store, mazmorra] = await Promise.all([
+  const [posts, sagas, subscribers, store, mazmorra] = await Promise.all([
     countRows('posts'),
-    countRows('games'),
+    countRows('sagas'),
     countRows('subscribers'),
     readStore(),
     readContent('mazmorra'),
   ]);
 
-  return { posts, games, subscribers, products: store.products.length, mazmorra };
+  return { posts, sagas, subscribers, products: store.products.length, mazmorra };
 }
 
 const StatCard = ({ label, value, href, color }) => (
@@ -60,8 +60,8 @@ export default async function AdminDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         <StatCard label="POSTS" value={stats.posts} href={ap('/posts')} color="text-brand-purple" />
-        <StatCard label="CATÁLOGO" value={stats.games} href={ap('/catalogo')} color="text-brand-amber" />
-        <StatCard label="PRODUCTOS" value={stats.products} href={ap('/merch')} color="text-brand-amber" />
+        <StatCard label="SAGAS" value={stats.sagas} href={ap('/sagas')} color="text-brand-amber" />
+        <StatCard label="CATÁLOGO" value={stats.products} href={ap('/merch')} color="text-brand-amber" />
         <StatCard label="SUSCRIPTORES" value={stats.subscribers} href={ap('/newsletter')} color="text-green-400" />
       </div>
 
@@ -72,7 +72,7 @@ export default async function AdminDashboard() {
         </h2>
         <div className="flex flex-wrap gap-3">
           {[
-            ['🛒 Merch', ap('/merch')],
+            ['🛒 Catálogo', ap('/merch')],
             ['▶ Media', ap('/media')],
             ['⚑ Comunidad', ap('/comunidad')],
             ['⌂ Home', ap('/home')],
@@ -103,10 +103,10 @@ export default async function AdminDashboard() {
             + Nuevo Post
           </Link>
           <Link
-            href={ap('/catalogo/new')}
+            href={ap('/sagas')}
             className="border border-brand-amber text-brand-amber text-xs px-4 py-2 font-body hover:bg-brand-amber/10 transition-colors"
           >
-            + Nuevo Análisis
+            ⚔ Sagas
           </Link>
           <Link
             href={ap('/mazmorra')}

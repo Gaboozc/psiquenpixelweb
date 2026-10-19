@@ -7,7 +7,9 @@ import TableOfContents from '@/components/blog/TableOfContents';
 import RelatedContent from '@/components/blog/RelatedContent';
 import ShareButtons from '@/components/ui/ShareButtons';
 import XpButton from '@/components/ui/XpButton';
+import SagaNav from '@/components/blog/SagaNav';
 import { getPostBySlug, getAllPosts, getAdjacentPosts, getRelatedPosts } from '@/lib/posts';
+import { getSagaContext } from '@/lib/sagas';
 import { formatDate } from '@/lib/format';
 
 const SITE = 'https://psiquenpixel.com';
@@ -48,10 +50,19 @@ export default async function ArticlePage({ params }) {
 
   if (!post) notFound();
 
-  const [{ prev, next }, related] = await Promise.all([
+  const [adjacent, relatedAll, sagaCtx] = await Promise.all([
     getAdjacentPosts(slug),
-    getRelatedPosts(slug),
+    getRelatedPosts(slug, 6),
+    getSagaContext(post),
   ]);
+
+  // Inside a saga, prev/next walk the saga in order; otherwise, the blog by date.
+  const prev = sagaCtx ? sagaCtx.prev : adjacent.prev;
+  const next = sagaCtx ? sagaCtx.next : adjacent.next;
+  const navLabel = (p, fallback) => (sagaCtx && p ? p.partLabel.toUpperCase() : fallback);
+
+  // The saga's other parts are already listed in the saga box.
+  const related = relatedAll.filter((p) => !sagaCtx || p.sagaSlug !== post.sagaSlug).slice(0, 3);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -77,6 +88,7 @@ export default async function ArticlePage({ params }) {
       {/* Header */}
       <header className="mb-10">
         <div className="flex items-center gap-3 mb-6 flex-wrap">
+          {post.game && <Badge color="amber">{post.game}</Badge>}
           {post.category && <Badge color="purple">{post.category}</Badge>}
           {post.date && (
             <span
@@ -107,6 +119,8 @@ export default async function ArticlePage({ params }) {
       </header>
 
       <PixelDivider className="mb-10" />
+
+      {sagaCtx && <SagaNav context={sagaCtx} />}
 
       {/* Table of contents */}
       <TableOfContents headings={post.headings} accentColor="purple" />
@@ -144,7 +158,7 @@ export default async function ArticlePage({ params }) {
                 className="pixel-border p-4 flex flex-col gap-1 hover:-translate-y-0.5 transition-transform"
                 style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
-                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>← ANTERIOR</span>
+                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>← {navLabel(prev, 'ANTERIOR')}</span>
                 <span className="text-brand-text text-xs font-body line-clamp-2 leading-snug">{prev.title}</span>
               </a>
             ) : <div />}
@@ -154,7 +168,7 @@ export default async function ArticlePage({ params }) {
                 className="pixel-border p-4 flex flex-col gap-1 items-end text-right hover:-translate-y-0.5 transition-transform"
                 style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}
               >
-                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>SIGUIENTE →</span>
+                <span className="text-brand-muted text-[8px]" style={{ fontFamily: 'var(--font-pixel)' }}>{navLabel(next, 'SIGUIENTE')} →</span>
                 <span className="text-brand-text text-xs font-body line-clamp-2 leading-snug">{next.title}</span>
               </a>
             ) : <div />}
@@ -167,7 +181,7 @@ export default async function ArticlePage({ params }) {
       </div>
 
       {/* Related posts */}
-      <RelatedContent items={related} type="post" accentColor="purple" />
+      <RelatedContent items={related} />
     </article>
   );
 }
