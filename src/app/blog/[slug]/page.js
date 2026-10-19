@@ -79,7 +79,7 @@ export default async function ArticlePage({ params }) {
   };
 
   return (
-    <article className="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+    <article className="max-w-2xl mx-auto px-4 sm:px-6 py-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -127,7 +127,7 @@ export default async function ArticlePage({ params }) {
 
       {/* Body */}
       <div
-        className="prose prose-invert prose-purple max-w-none font-body text-brand-text leading-relaxed scroll-smooth"
+        className="prose prose-lg prose-invert prose-purple max-w-none font-body text-brand-text scroll-smooth"
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
