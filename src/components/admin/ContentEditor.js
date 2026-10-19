@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import RichTextEditor from './RichTextEditor';
+import TagInput, { tagCatalog, normalizeTags } from './TagInput';
 import { uploadFile } from '@/lib/uploadClient';
 import { ap } from '@/lib/adminPath';
 
@@ -92,6 +93,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(false);
   const [sagas, setSagas] = useState([]);
+  const [tagList, setTagList] = useState([]);
 
   // Sagas the post can belong to (for the selector).
   useEffect(() => {
@@ -99,6 +101,11 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
       .then((r) => (r.ok ? r.json() : []))
       .then((list) => setSagas(Array.isArray(list) ? list : []))
       .catch(() => setSagas([]));
+    // Tags already used by other posts, for suggestions.
+    fetch('/api/admin/posts')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list) => setTagList(tagCatalog(Array.isArray(list) ? list.filter((p) => p.slug !== initial?.slug) : [])))
+      .catch(() => setTagList([]));
   }, []);
 
   const set = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }));
@@ -109,7 +116,7 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
     setError('');
     const payload = {
       ...form,
-      tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+      tags: normalizeTags(form.tags, tagList),
       sagaSlug: form.sagaSlug || null,
       sagaOrder: Number(form.sagaOrder) || 0,
     };
@@ -211,7 +218,12 @@ export function PostEditor({ initial, onSave, saveLabel = 'Guardar Post' }) {
           </Field>
 
           <Field label="TAGS (separados por comas)">
-            <input value={form.tags} onChange={set('tags')} className="admin-input" placeholder="zelda, identidad, disociacion" />
+            <TagInput
+              value={form.tags}
+              onChange={(v) => setForm((f) => ({ ...f, tags: v }))}
+              catalog={tagList}
+              placeholder="zelda, identidad, disociacion"
+            />
           </Field>
 
           <Field label="CONTENIDO">

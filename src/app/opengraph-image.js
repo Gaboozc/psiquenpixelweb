@@ -21,7 +21,7 @@ export default function Image() {
           fontFamily: 'sans-serif',
         }}
       >
-        <div style={{ fontSize: 34, letterSpacing: 8, color: '#9b59f7' }}>⚔ PSIQUE &apos;N&apos; PIXEL ⚔</div>
+        <div style={{ fontSize: 34, letterSpacing: 8, color: '#9b59f7' }}>PSIQUE &apos;N&apos; PIXEL</div>
         <div style={{ fontSize: 76, fontWeight: 700, marginTop: 24, textAlign: 'center', padding: '0 80px' }}>
           Las Mazmorras de la Mente
         </div>

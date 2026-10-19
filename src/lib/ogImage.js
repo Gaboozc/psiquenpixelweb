@@ -36,7 +36,7 @@ export function renderOgCard({ eyebrow, title, accent = '#9b59f7' }) {
           {title}
         </div>
         <div style={{ display: 'flex', fontSize: 28, letterSpacing: 6, color: '#8a8799' }}>
-          ⚔ PSIQUE &apos;N&apos; PIXEL — LAS MAZMORRAS DE LA MENTE
+          PSIQUE &apos;N&apos; PIXEL — LAS MAZMORRAS DE LA MENTE
         </div>
       </div>
     ),

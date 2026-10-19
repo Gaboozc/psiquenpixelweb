@@ -136,7 +136,7 @@ export default async function ArticlePage({ params }) {
         {post.tags?.length > 0 && (
           <div className="flex flex-wrap gap-2 mb-8">
             {post.tags.map((tag) => (
-              <Link key={tag} href={`/blog/tag/${encodeURIComponent(tag.toLowerCase())}`}>
+              <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag.trim().toLowerCase())}`}>
                 <Badge color="muted" className="hover:text-brand-text transition-colors">#{tag}</Badge>
               </Link>
             ))}

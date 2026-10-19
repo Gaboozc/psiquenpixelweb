@@ -1,25 +1,44 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ArticleCard from '@/components/blog/ArticleCard';
 import SagaCard from '@/components/blog/SagaCard';
+import FacetFilter from '@/components/blog/FacetFilter';
 
-// Flatten + dedupe + sort a field across all posts (string or string[]).
-const collect = (posts, field) =>
-  [...new Set(posts.flatMap((p) => (Array.isArray(p[field]) ? p[field] : [p[field]])).filter(Boolean))]
-    .sort((a, b) => a.localeCompare(b, 'es'));
+// Tags are free text, so "Trauma" and "trauma" must count as one tag.
+const tagKey = (t) => String(t).trim().toLowerCase();
 
 // Blog index. With no search or filter, each saga collapses into one card and
 // sits among standalone posts (newest first). While searching/filtering, every
 // matching post is listed individually, labelled with its saga and part.
+// Filters live in the URL (?q=…&juego=…&tag=…&tag=…) so results can be shared
+// and post tags can link straight to a filtered view.
 const BlogExplorer = ({ posts, sagas }) => {
   const [query, setQuery] = useState('');
   const [activeGame, setActiveGame] = useState(null);
-  const [activeTag, setActiveTag] = useState(null);
+  const [activeTags, setActiveTags] = useState([]); // tag keys, AND-ed
 
-  const games = useMemo(() => collect(posts, 'game'), [posts]);
-  const tags = useMemo(() => collect(posts, 'tags'), [posts]);
+  // ── URL ⇄ state ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setQuery(params.get('q') ?? '');
+    setActiveGame(params.get('juego'));
+    setActiveTags([...new Set(params.getAll('tag').map(tagKey).filter(Boolean))]);
+  }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (query.trim()) params.set('q', query.trim());
+    if (activeGame) params.set('juego', activeGame);
+    activeTags.forEach((t) => params.append('tag', t));
+    const qs = params.toString();
+    const url = `${window.location.pathname}${qs ? `?${qs}` : ''}`;
+    if (url !== `${window.location.pathname}${window.location.search}`) {
+      window.history.replaceState(null, '', url);
+    }
+  }, [query, activeGame, activeTags]);
+
+  // ── Derived data ──────────────────────────────────────────────────────────
   // slug → { sagaTitle, partLabel } for labelling posts outside their saga page.
   const sagaInfo = useMemo(() => {
     const map = new Map();
@@ -27,22 +46,66 @@ const BlogExplorer = ({ posts, sagas }) => {
     return map;
   }, [sagas]);
 
-  const hasFilters = Boolean(query.trim() || activeGame || activeTag);
+  // Each post with its normalised tag keys, computed once.
+  const indexed = useMemo(
+    () => posts.map((p) => ({ post: p, tagKeys: new Set((p.tags ?? []).map(tagKey)) })),
+    [posts],
+  );
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return posts.filter((p) => {
-      const saga = sagaInfo.get(p.slug);
-      const matchesQuery =
-        !q ||
-        [p.title, p.game, p.excerpt, p.category, saga?.sagaTitle]
-          .filter(Boolean)
-          .some((field) => field.toLowerCase().includes(q));
-      const matchesGame = !activeGame || p.game === activeGame;
-      const matchesTag = !activeTag || (p.tags ?? []).includes(activeTag);
-      return matchesQuery && matchesGame && matchesTag;
-    });
-  }, [posts, query, activeGame, activeTag, sagaInfo]);
+  // Most common spelling of each tag, used as its label.
+  const tagLabels = useMemo(() => {
+    const spellings = new Map();
+    for (const p of posts) for (const t of p.tags ?? []) {
+      const k = tagKey(t);
+      if (!k) continue;
+      const m = spellings.get(k) ?? new Map();
+      m.set(t, (m.get(t) ?? 0) + 1);
+      spellings.set(k, m);
+    }
+    return new Map([...spellings].map(([k, m]) => [k, [...m].sort((a, b) => b[1] - a[1])[0][0]]));
+  }, [posts]);
+
+  const q = query.trim().toLowerCase();
+  const matchesQuery = (p) =>
+    !q || [p.title, p.game, p.excerpt, p.category, sagaInfo.get(p.slug)?.sagaTitle]
+      .filter(Boolean).some((f) => f.toLowerCase().includes(q));
+  const matchesGame = (p) => !activeGame || p.game === activeGame;
+  const matchesTags = (keys) => activeTags.every((t) => keys.has(t));
+
+  const filtered = useMemo(
+    () => indexed.filter(({ post, tagKeys }) => matchesQuery(post) && matchesGame(post) && matchesTags(tagKeys)).map((x) => x.post),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [indexed, q, activeGame, activeTags, sagaInfo],
+  );
+
+  // Faceted counts: tag counts over the current results (so picking more tags
+  // narrows down and never leads to an empty list); game counts ignore the game
+  // filter itself, so you can switch game.
+  const tagOptions = useMemo(() => {
+    const counts = new Map();
+    for (const { post, tagKeys } of indexed) {
+      if (!matchesQuery(post) || !matchesGame(post) || !matchesTags(tagKeys)) continue;
+      for (const k of tagKeys) counts.set(k, (counts.get(k) ?? 0) + 1);
+    }
+    for (const k of activeTags) if (!counts.has(k)) counts.set(k, 0);
+    return [...counts]
+      .map(([key, count]) => ({ key, count, label: tagLabels.get(key) ?? key }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexed, q, activeGame, activeTags, tagLabels, sagaInfo]);
+
+  const gameOptions = useMemo(() => {
+    const counts = new Map();
+    for (const { post, tagKeys } of indexed) {
+      if (!post.game || !matchesQuery(post) || !matchesTags(tagKeys)) continue;
+      counts.set(post.game, (counts.get(post.game) ?? 0) + 1);
+    }
+    if (activeGame && !counts.has(activeGame)) counts.set(activeGame, 0);
+    return [...counts]
+      .map(([key, count]) => ({ key, count, label: key }))
+      .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'es'));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexed, q, activeGame, activeTags, sagaInfo]);
 
   // Default view: sagas as single cards + posts that belong to no visible saga.
   const grouped = useMemo(() => {
@@ -54,32 +117,18 @@ const BlogExplorer = ({ posts, sagas }) => {
     return items.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
   }, [posts, sagas, sagaInfo]);
 
-  const toggle = (value, current, setter) => setter(current === value ? null : value);
+  const hasFilters = Boolean(q || activeGame || activeTags.length);
+
+  const toggleTag = (k) => setActiveTags((ts) => (ts.includes(k) ? ts.filter((t) => t !== k) : [...ts, k]));
+  const toggleGame = (g) => setActiveGame((cur) => (cur === g ? null : g));
   const clearFilters = () => {
     setQuery('');
     setActiveGame(null);
-    setActiveTag(null);
+    setActiveTags([]);
   };
 
-  // Shared chip look; `active` inverts the fill for the selected chip.
-  const chip = (active, color) => {
-    const base = 'px-3 py-1 text-[8px] tracking-widest border transition-colors duration-150 cursor-pointer';
-    const palette =
-      color === 'amber'
-        ? active
-          ? 'bg-brand-amber text-brand-bg border-brand-amber'
-          : 'text-brand-amber border-brand-amber hover:bg-brand-amber/10'
-        : active
-          ? 'bg-brand-purple text-brand-bg border-brand-purple'
-          : 'text-brand-muted border-brand-border hover:text-brand-purple hover:border-brand-purple';
-    return `${base} ${palette}`;
-  };
-
-  const ChipLabel = ({ children }) => (
-    <p className="text-brand-muted text-[8px] tracking-widest uppercase" style={{ fontFamily: 'var(--font-pixel)' }}>
-      {children}
-    </p>
-  );
+  const pixel = { fontFamily: 'var(--font-pixel)' };
+  const clearBtn = 'px-3 py-1 text-[8px] tracking-widest border transition-colors duration-150 cursor-pointer text-brand-muted border-brand-border hover:text-brand-purple hover:border-brand-purple';
 
   return (
     <div className="flex flex-col gap-8">
@@ -92,38 +141,27 @@ const BlogExplorer = ({ posts, sagas }) => {
         className="pixel-border w-full bg-brand-bg text-brand-text font-body text-sm px-4 py-3 placeholder:text-brand-muted focus:outline-none"
       />
 
-      {games.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <ChipLabel>Juego</ChipLabel>
-          <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={() => setActiveGame(null)} className={chip(!activeGame, 'amber')} style={{ fontFamily: 'var(--font-pixel)' }}>
-              Todos
-            </button>
-            {games.map((g) => (
-              <button key={g} type="button" onClick={() => toggle(g, activeGame, setActiveGame)}
-                className={chip(activeGame === g, 'amber')} style={{ fontFamily: 'var(--font-pixel)' }}>
-                {g}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <FacetFilter
+        title="Juego"
+        options={gameOptions}
+        selected={activeGame ? [activeGame] : []}
+        onToggle={toggleGame}
+        onClear={() => setActiveGame(null)}
+        color="amber"
+        limit={8}
+      />
 
-      {tags.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <ChipLabel>Etiquetas</ChipLabel>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((t) => (
-              <button key={t} type="button" onClick={() => toggle(t, activeTag, setActiveTag)}
-                className={chip(activeTag === t, 'purple')} style={{ fontFamily: 'var(--font-pixel)' }}>
-                #{t}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <FacetFilter
+        title="Etiquetas"
+        options={tagOptions}
+        selected={activeTags}
+        onToggle={toggleTag}
+        onClear={() => setActiveTags([])}
+        prefix="#"
+        limit={10}
+      />
 
-      <p className="text-brand-muted text-[8px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>
+      <p className="text-brand-muted text-[8px] tracking-widest" style={pixel}>
         {hasFilters
           ? `${filtered.length} ${filtered.length === 1 ? 'post' : 'posts'}`
           : `${posts.length} ${posts.length === 1 ? 'post' : 'posts'}${sagas.length ? ` · ${sagas.length} ${sagas.length === 1 ? 'saga' : 'sagas'}` : ''}`}
@@ -133,11 +171,9 @@ const BlogExplorer = ({ posts, sagas }) => {
         filtered.length === 0 ? (
           <div className="pixel-border-purple p-12 text-center flex flex-col items-center gap-4"
             style={{ backgroundImage: 'url(/cards.png?v=2)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-            <p className="text-brand-purple text-[9px] tracking-widest" style={{ fontFamily: 'var(--font-pixel)' }}>▓▓▓</p>
+            <p className="text-brand-purple text-[9px] tracking-widest" style={pixel}>▓▓▓</p>
             <p className="text-brand-muted text-sm font-body">Ningún post coincide con tu búsqueda.</p>
-            <button type="button" onClick={clearFilters} className={chip(false, 'purple')} style={{ fontFamily: 'var(--font-pixel)' }}>
-              Limpiar filtros
-            </button>
+            <button type="button" onClick={clearFilters} className={clearBtn} style={pixel}>Limpiar filtros</button>
           </div>
         ) : (
           <>
@@ -145,9 +181,7 @@ const BlogExplorer = ({ posts, sagas }) => {
               {filtered.map((p) => <ArticleCard key={p.slug} {...p} {...sagaInfo.get(p.slug)} />)}
             </div>
             <div>
-              <button type="button" onClick={clearFilters} className={chip(false, 'purple')} style={{ fontFamily: 'var(--font-pixel)' }}>
-                Limpiar filtros
-              </button>
+              <button type="button" onClick={clearFilters} className={clearBtn} style={pixel}>Limpiar filtros</button>
             </div>
           </>
         )
